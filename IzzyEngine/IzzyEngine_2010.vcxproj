@@ -418,13 +418,17 @@
   <ItemGroup />
   <ItemGroup>
     <ClCompile Include="IzzyEngine.cpp" />
+    <ClCompile Include="Source\BaseApp.cpp" />
+    <ClCompile Include="Source\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="IzzyEngine.fx" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\BaseApp.h" />
     <ClInclude Include="Include\Prerequisites.h" />
-    <CLInclude Include="resource.h" />
+    <ClInclude Include="Include\Resource.h" />
+    <ClInclude Include="Include\Window.h" />
     <ResourceCompile Include="IzzyEngine.rc" />
   </ItemGroup>
   <ItemGroup>

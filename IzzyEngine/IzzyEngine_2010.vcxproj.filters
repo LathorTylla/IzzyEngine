@@ -23,9 +23,24 @@
     <ClInclude Include="Include\Prerequisites.h">
       <Filter>Includes</Filter>
     </ClInclude>
+    <ClInclude Include="Include\BaseApp.h">
+      <Filter>Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Window.h">
+      <Filter>Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Resource.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="IzzyEngine.cpp" />
+    <ClCompile Include="Source\BaseApp.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Window.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="IzzyEngine.fx">
@@ -33,9 +48,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <CLInclude Include="resource.h">
-      <Filter>Resource Files</Filter>
-    </CLInclude>
     <ResourceCompile Include="IzzyEngine.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>

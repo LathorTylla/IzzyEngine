@@ -27,5 +27,4 @@ public:
 			WNDPROC wndproc);
 
 private:
-
 };

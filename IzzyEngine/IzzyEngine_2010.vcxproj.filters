@@ -32,6 +32,12 @@
     <ClInclude Include="Include\Resource.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
+    <ClInclude Include="Include\SwapChain.h">
+      <Filter>Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Device.h">
+      <Filter>Includes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="IzzyEngine.cpp" />
@@ -39,6 +45,9 @@
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\Window.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Device.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>

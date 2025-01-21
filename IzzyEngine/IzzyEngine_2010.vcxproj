@@ -419,6 +419,7 @@
   <ItemGroup>
     <ClCompile Include="IzzyEngine.cpp" />
     <ClCompile Include="Source\BaseApp.cpp" />
+    <ClCompile Include="Source\Device.cpp" />
     <ClCompile Include="Source\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -426,8 +427,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\BaseApp.h" />
+    <ClInclude Include="Include\Device.h" />
     <ClInclude Include="Include\Prerequisites.h" />
     <ClInclude Include="Include\Resource.h" />
+    <ClInclude Include="Include\SwapChain.h" />
     <ClInclude Include="Include\Window.h" />
     <ResourceCompile Include="IzzyEngine.rc" />
   </ItemGroup>

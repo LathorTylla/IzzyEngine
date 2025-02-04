@@ -38,6 +38,9 @@
     <ClInclude Include="Include\Device.h">
       <Filter>Includes</Filter>
     </ClInclude>
+    <ClInclude Include="Include\DeviceContext.h">
+      <Filter>Includes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="IzzyEngine.cpp" />
@@ -48,6 +51,9 @@
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\Device.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DeviceContext.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>

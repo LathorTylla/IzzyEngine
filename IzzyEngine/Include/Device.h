@@ -36,19 +36,19 @@ public:
 
 	HRESULT
 	STDMETHODCALLTYPE CreateVertexShader(const void* pShaderBytecode,
-																				 SIZE_T BytecodeLength,
+																				 unsigned int BytecodeLength,
 																				 ID3D11ClassLinkage* pClassLinkage,
 																				 ID3D11VertexShader** ppVertexShader);
 
 	HRESULT
-	STDMETHODCALLTYPE CreateInputLayout(const D3D11_INPUT_ELEMENT_DESC* pInputElementDescs,
-																			  UINT NumElements,
+	STDMETHODCALLTYPE CreateInputLayout(D3D11_INPUT_ELEMENT_DESC* pInputElementDescs,
+																			  unsigned int NumElements,
 																				const void* pShaderBytecodeWithInputSignature,
-																				SIZE_T BytecodeLength,
+																				unsigned int BytecodeLength,
 																				ID3D11InputLayout** ppInputLayout);
 	HRESULT
 	STDMETHODCALLTYPE CreatePixelShader(const void* pShaderBytecode,
-																				SIZE_T BytecodeLength,
+																				unsigned int BytecodeLength,
 																				ID3D11ClassLinkage* pClassLinkage,
 																				ID3D11PixelShader** ppPixelShader);
 

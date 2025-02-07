@@ -32,13 +32,19 @@
     <ClInclude Include="Include\Resource.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\SwapChain.h">
+    <ClInclude Include="Include\Swapchain.h">
       <Filter>Includes</Filter>
     </ClInclude>
     <ClInclude Include="Include\Device.h">
       <Filter>Includes</Filter>
     </ClInclude>
     <ClInclude Include="Include\DeviceContext.h">
+      <Filter>Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Texture.h">
+      <Filter>Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\stb_image.h">
       <Filter>Includes</Filter>
     </ClInclude>
   </ItemGroup>
@@ -54,6 +60,12 @@
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\DeviceContext.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Texture.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Swapchain.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>

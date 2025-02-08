@@ -2,6 +2,8 @@
 #include "Window.h"
 #include "Device.h"
 #include "DeviceContext.h"
+#include "Swapchain.h"
+#include "Texture.h"
 
 //--------------------------------------------------------------------------------------
 // Global Variables
@@ -12,8 +14,11 @@
 Window                              g_window;
 Device                              g_device;
 DeviceContext                       g_deviceContext;
-D3D_DRIVER_TYPE                     g_driverType = D3D_DRIVER_TYPE_NULL;
-D3D_FEATURE_LEVEL                   g_featureLevel = D3D_FEATURE_LEVEL_11_0;
+SwapChain                           g_swapchain;
+Texture                             g_backBuffer;
+
+//D3D_DRIVER_TYPE                     g_driverType = D3D_DRIVER_TYPE_NULL;
+//D3D_FEATURE_LEVEL                   g_featureLevel = D3D_FEATURE_LEVEL_11_0;
 //ID3D11Device*                       g_pd3dDevice = NULL;
 //ID3D11DeviceContext*                g_pImmediateContext = NULL;
 IDXGISwapChain*                     g_pSwapChain = nullptr;
@@ -131,63 +136,11 @@ HRESULT
 InitDevice(){
     HRESULT hr = S_OK;
 
-    //RECT rc;
-    //GetClientRect( g_hWnd, &rc );
-    //UINT width = rc.right - rc.left;
-    //UINT height = rc.bottom - rc.top;
-
-    unsigned int createDeviceFlags = 0;
-#ifdef _DEBUG
-    createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
-#endif
-
-    D3D_DRIVER_TYPE driverTypes[] ={
-        D3D_DRIVER_TYPE_HARDWARE,
-        D3D_DRIVER_TYPE_WARP,
-        D3D_DRIVER_TYPE_REFERENCE,
-    };
-    unsigned int numDriverTypes = ARRAYSIZE( driverTypes );
-
-    D3D_FEATURE_LEVEL featureLevels[] ={
-        D3D_FEATURE_LEVEL_11_0,
-        D3D_FEATURE_LEVEL_10_1,
-        D3D_FEATURE_LEVEL_10_0,
-    };
-    unsigned int numFeatureLevels = ARRAYSIZE( featureLevels );
-
-    DXGI_SWAP_CHAIN_DESC sd;
-    ZeroMemory( &sd, sizeof( sd ) );
-    sd.BufferCount = 1;
-    sd.BufferDesc.Width = g_window.m_width;
-    sd.BufferDesc.Height = g_window.m_height;
-    sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    sd.BufferDesc.RefreshRate.Numerator = 60;
-    sd.BufferDesc.RefreshRate.Denominator = 1;
-    sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    sd.OutputWindow = g_window.m_hWnd;
-    sd.SampleDesc.Count = 1;
-    sd.SampleDesc.Quality = 0;
-    sd.Windowed = TRUE;
-
-    for( unsigned int driverTypeIndex = 0; driverTypeIndex < numDriverTypes; driverTypeIndex++ )
-    {
-        g_driverType = driverTypes[driverTypeIndex];
-        hr = D3D11CreateDeviceAndSwapChain(nullptr, g_driverType, nullptr, createDeviceFlags, featureLevels, numFeatureLevels,
-                                            D3D11_SDK_VERSION, &sd, &g_pSwapChain, &g_device.m_device, &g_featureLevel, &g_deviceContext.m_deviceContext );
-        if( SUCCEEDED( hr ) )
-            break;
-    }
-    if( FAILED( hr ) )
-        return hr;
+    hr = g_swapchain.init(g_device, g_deviceContext, g_backBuffer, g_window);
 
     // Create a render target view
-    ID3D11Texture2D* pBackBuffer = nullptr;
-    hr = g_pSwapChain->GetBuffer( 0, __uuidof( ID3D11Texture2D ), ( LPVOID* )&pBackBuffer );
-    if( FAILED( hr ) )
-        return hr;
-
-    hr = g_device.CreateRenderTargetView( pBackBuffer, nullptr, &g_pRenderTargetView );
-    pBackBuffer->Release();
+    hr = g_device.CreateRenderTargetView(g_backBuffer.m_texture, nullptr, &g_pRenderTargetView);
+    g_backBuffer.m_texture->Release();
     if( FAILED( hr ) )
         return hr;
 
@@ -199,7 +152,7 @@ InitDevice(){
     descDepth.MipLevels = 1;
     descDepth.ArraySize = 1;
     descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-    descDepth.SampleDesc.Count = 1;
+    descDepth.SampleDesc.Count = 4;
     descDepth.SampleDesc.Quality = 0;
     descDepth.Usage = D3D11_USAGE_DEFAULT;
     descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
@@ -213,7 +166,7 @@ InitDevice(){
     D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
     ZeroMemory( &descDSV, sizeof(descDSV) );
     descDSV.Format = descDepth.Format;
-    descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+    descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
     descDSV.Texture2D.MipSlice = 0;
     hr = g_device.CreateDepthStencilView( g_pDepthStencil, &descDSV, &g_pDepthStencilView );
     if( FAILED( hr ) )
@@ -435,7 +388,7 @@ void CleanupDevice()
     if( g_pDepthStencil ) g_pDepthStencil->Release();
     if( g_pDepthStencilView ) g_pDepthStencilView->Release();
     if( g_pRenderTargetView ) g_pRenderTargetView->Release();
-    if( g_pSwapChain ) g_pSwapChain->Release();
+    g_swapchain.destroy();
     if( g_deviceContext.m_deviceContext) g_deviceContext.m_deviceContext->Release();
     if( g_device.m_device ) g_device.m_device->Release();
 }
@@ -458,7 +411,7 @@ WndProc( HWND hWnd, unsigned int message, WPARAM wParam, LPARAM lParam )
             break;
 
         case WM_SIZE:
-          if (g_pSwapChain) {
+          if (g_swapchain.m_swapchain) {
             g_window.m_width = LOWORD(lParam);
             g_window.m_height = HIWORD(lParam);
 
@@ -469,7 +422,7 @@ WndProc( HWND hWnd, unsigned int message, WPARAM wParam, LPARAM lParam )
             if (g_pDepthStencil) { g_pDepthStencil->Release(); g_pDepthStencil = nullptr; }
 
             // Redimensionar el swap chain
-            HRESULT hr = g_pSwapChain->ResizeBuffers(0, g_window.m_width, g_window.m_height, DXGI_FORMAT_UNKNOWN, 0);
+            HRESULT hr = g_swapchain.m_swapchain->ResizeBuffers(0, g_window.m_width, g_window.m_height, DXGI_FORMAT_UNKNOWN, 0);
             if (FAILED(hr)) {
               MessageBox(hWnd, "Failed to resize swap chain buffers.", "Error", MB_OK);
               PostQuitMessage(0);
@@ -477,7 +430,7 @@ WndProc( HWND hWnd, unsigned int message, WPARAM wParam, LPARAM lParam )
 
             // Crear un nuevo render target
             ID3D11Texture2D* pBackBuffer = nullptr;
-            g_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
+            g_swapchain.m_swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
             g_device.CreateRenderTargetView(pBackBuffer, nullptr, &g_pRenderTargetView);
             pBackBuffer->Release();
 
@@ -489,7 +442,7 @@ WndProc( HWND hWnd, unsigned int message, WPARAM wParam, LPARAM lParam )
             descDepth.MipLevels = 1;
             descDepth.ArraySize = 1;
             descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-            descDepth.SampleDesc.Count = 1;
+            descDepth.SampleDesc.Count = 4;
             descDepth.SampleDesc.Quality = 0;
             descDepth.Usage = D3D11_USAGE_DEFAULT;
             descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
@@ -501,7 +454,7 @@ WndProc( HWND hWnd, unsigned int message, WPARAM wParam, LPARAM lParam )
             D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
             ZeroMemory(&descDSV, sizeof(descDSV));
             descDSV.Format = descDepth.Format;
-            descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+            descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
             descDSV.Texture2D.MipSlice = 0;
             g_device.CreateDepthStencilView(g_pDepthStencil, &descDSV, &g_pDepthStencilView);
 
@@ -548,7 +501,7 @@ update()
 {
     // Update our time
     static float t = 0.0f;
-    if( g_driverType == D3D_DRIVER_TYPE_REFERENCE )
+    if( g_swapchain.m_driverType == D3D_DRIVER_TYPE_REFERENCE )
     {
         t += ( float )XM_PI * 0.0125f;
     }
@@ -592,7 +545,6 @@ Render() {
   // Limpiar los buffers
   const float ClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f }; // red, green, blue, alpha
   g_deviceContext.ClearRenderTargetView(g_pRenderTargetView, ClearColor);
-  g_deviceContext.ClearDepthStencilView(g_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
   // Configurar los recursos de renderizado
   g_deviceContext.OMSetRenderTargets(1, &g_pRenderTargetView, g_pDepthStencilView);
@@ -608,6 +560,8 @@ Render() {
   vp.TopLeftY = 0;
 
   g_deviceContext.RSSetViewports(1, &vp);
+
+  g_deviceContext.ClearDepthStencilView(g_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
   // Configurar los buffers y shaders para el pipeline
   g_deviceContext.IASetInputLayout(g_pVertexLayout);
@@ -629,5 +583,5 @@ Render() {
   g_deviceContext.DrawIndexed(36, 0, 0);
 
   // Presentar el frame en pantalla
-    g_pSwapChain->Present( 0, 0 );
+  g_swapchain.present();
 }

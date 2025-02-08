@@ -65,7 +65,8 @@ SwapChain::init(Device& device,
     return hr;
   }
   // Configurar la descripción del SwapChain
-  DXGI_SWAP_CHAIN_DESC sd = {};
+  DXGI_SWAP_CHAIN_DESC sd;
+  memset(&sd, 0, sizeof(sd));
   sd.BufferCount = 1;
   sd.BufferDesc.Width = window.m_width;
   sd.BufferDesc.Height = window.m_height;

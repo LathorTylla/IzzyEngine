@@ -9,10 +9,10 @@ class Window;
 class Texture;
 
 class 
-Swapchain{
+SwapChain{
 public:
-	Swapchain() = default;
-	~Swapchain() = default;
+	SwapChain() = default;
+	~SwapChain() = default;
 
 	HRESULT
 		init(Device& device,
@@ -33,7 +33,7 @@ public:
 	present();
 
 public:
-	IDXGISwapChain* m_swapChain = nullptr;
+	IDXGISwapChain* m_swapchain = nullptr;
 	D3D_DRIVER_TYPE m_driverType = D3D_DRIVER_TYPE_NULL;
 private:
 	D3D_FEATURE_LEVEL m_featureLevel = D3D_FEATURE_LEVEL_11_0;
@@ -44,8 +44,6 @@ private:
 	IDXGIDevice* m_dxgiDevice = nullptr;
 	IDXGIAdapter* m_dxgiAdapter = nullptr;
 	IDXGIFactory* m_dxgiFactory = nullptr;
-
-
 
 private:
 

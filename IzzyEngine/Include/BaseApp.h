@@ -2,7 +2,7 @@
 #include "Prerequisites.h"
 
 class
-	BaseApp {
+BaseApp {
 public:
 	BaseApp() = default;
 	~BaseApp() = default;

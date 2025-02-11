@@ -8,27 +8,25 @@ class Texture;
 class DepthStencilView;
 
 class
-RenderTargetView {
+  RenderTargetView {
 public:
   RenderTargetView() = default;
   ~RenderTargetView() = default;
 
   HRESULT
-    init(Device& device,
-      Texture& backBuffer,
-      DXGI_FORMAT Format);
+    init(Device& device, Texture& backBuffer, DXGI_FORMAT Format);
 
   void
-   update();
+    update();
 
   void
-   render(DeviceContext& deviceContext,
+    render(DeviceContext& deviceContext,
       DepthStencilView& depthStencilView,
       unsigned int numViews,
       const float ClearColor[4]);
 
   void
-  destroy();
+    destroy();
 
 public:
   ID3D11RenderTargetView* m_renderTargetView = nullptr;

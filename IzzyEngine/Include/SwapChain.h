@@ -15,7 +15,7 @@ public:
 	~SwapChain() = default;
 
 	HRESULT
-		init(Device& device,
+	init(Device& device,
 				 DeviceContext& deviceContext,
 				 Texture& backBuffer,
 				 Window window);

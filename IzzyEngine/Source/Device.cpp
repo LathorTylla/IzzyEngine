@@ -1,5 +1,10 @@
 #include "Device.h"
 
+void
+Device::destroy() {
+	SAFE_RELEASE(m_device);
+}
+
 HRESULT
 Device::CreateRenderTargetView(ID3D11Resource* pResource,
 															 const D3D11_RENDER_TARGET_VIEW_DESC* pDesc,

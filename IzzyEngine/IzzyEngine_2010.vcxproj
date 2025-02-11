@@ -430,9 +430,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\BaseApp.h" />
+    <ClInclude Include="Include\DepthStencilView.h" />
     <ClInclude Include="Include\Device.h" />
     <ClInclude Include="Include\DeviceContext.h" />
     <ClInclude Include="Include\Prerequisites.h" />
+    <ClInclude Include="Include\RenderTargetView.h" />
     <ClInclude Include="Include\Resource.h" />
     <ClInclude Include="Include\stb_image.h" />
     <ClInclude Include="Include\Swapchain.h" />

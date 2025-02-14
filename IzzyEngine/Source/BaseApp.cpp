@@ -23,11 +23,9 @@ BaseApp::run(HINSTANCE hInstance,
 						 LPWSTR lpCmdLine,
 						 int nCmdShow,
 						 WNDPROC wndproc) {
-  UNREFERENCED_PARAMETER(hPrevInstance);
-  UNREFERENCED_PARAMETER(lpCmdLine);
+             UNREFERENCED_PARAMETER(hPrevInstance);
+             UNREFERENCED_PARAMETER(lpCmdLine);
 
-  //if (FAILED(g_window.init(hInstance, nCmdShow, WndProc)))
-    //return 0;
 
   if (FAILED(init())) {
     destroy();

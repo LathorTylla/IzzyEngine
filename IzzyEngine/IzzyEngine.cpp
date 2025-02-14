@@ -70,7 +70,11 @@ wWinMain(HINSTANCE hInstance,
 	// Main message loop
 	MSG msg = { 0 };
 	while (WM_QUIT != msg.message) {
-		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
+		if (PeekMessage(&msg, 
+										nullptr, 
+										0, 
+										0, 
+										PM_REMOVE)) {
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
@@ -97,10 +101,7 @@ CompileShaderFromFile(char* szFileName,
 
 	DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 #if defined( DEBUG ) || defined( _DEBUG )
-	// Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
-	// Setting this flag improves the shader debugging experience, but still allows 
-	// the shaders to be optimized and to run exactly the way they will run in 
-	// the release configuration of this program.
+	
 	dwShaderFlags |= D3DCOMPILE_DEBUG;
 #endif
 
@@ -183,7 +184,10 @@ InitDevice() {
 
 	// Compile the vertex shader
 	ID3DBlob* pVSBlob = nullptr;
-	hr = CompileShaderFromFile("IzzyEngine.fx", "VS", "vs_4_0", &pVSBlob);
+	hr = CompileShaderFromFile("IzzyEngine.fx", 
+														 "VS", 
+														 "vs_4_0", 
+														 &pVSBlob);
 	if (FAILED(hr)) {
 		MessageBox(nullptr,
 			"The FX file cannot be compiled.  Please run this executable from the directory that contains the FX file.", "Error", MB_OK);
@@ -221,7 +225,10 @@ InitDevice() {
 
 	// Compile the pixel shader
 	ID3DBlob* pPSBlob = nullptr;
-	hr = CompileShaderFromFile("IzzyEngine.fx", "PS", "ps_4_0", &pPSBlob);
+	hr = CompileShaderFromFile("IzzyEngine.fx", 
+														 "PS", 
+														 "ps_4_0", 
+														 &pPSBlob);
 	if (FAILED(hr)) {
 		MessageBox(nullptr,
 			"The FX file cannot be compiled.  Please run this executable from the directory that contains the FX file.", "Error", MB_OK);
@@ -229,7 +236,10 @@ InitDevice() {
 	}
 
 	// Create the pixel shader
-	hr = g_device.CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), nullptr, &g_pPixelShader);
+	hr = g_device.CreatePixelShader(pPSBlob->GetBufferPointer(), 
+																	pPSBlob->GetBufferSize(),
+																	nullptr, 
+																	&g_pPixelShader);
 	pPSBlob->Release();
 	if (FAILED(hr))
 		return hr;
@@ -326,22 +336,33 @@ InitDevice() {
 	bd.ByteWidth = sizeof(CBNeverChanges);
 	bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	bd.CPUAccessFlags = 0;
-	hr = g_device.CreateBuffer(&bd, nullptr, &g_pCBNeverChanges);
+	hr = g_device.CreateBuffer(&bd, 
+														 nullptr, 
+														 &g_pCBNeverChanges);
 	if (FAILED(hr))
 		return hr;
 
 	bd.ByteWidth = sizeof(CBChangeOnResize);
-	hr = g_device.CreateBuffer(&bd, nullptr, &g_pCBChangeOnResize);
+	hr = g_device.CreateBuffer(&bd, 
+															nullptr, 
+															&g_pCBChangeOnResize);
 	if (FAILED(hr))
 		return hr;
 
 	bd.ByteWidth = sizeof(CBChangesEveryFrame);
-	hr = g_device.CreateBuffer(&bd, nullptr, &g_pCBChangesEveryFrame);
+	hr = g_device.CreateBuffer(&bd, 
+														 nullptr, 
+														 &g_pCBChangesEveryFrame);
 	if (FAILED(hr))
 		return hr;
 
 	// Load the Texture
-	hr = D3DX11CreateShaderResourceViewFromFile(g_device.m_device, "seafloor.dds", nullptr, nullptr, &g_pTextureRV, nullptr);
+	hr = D3DX11CreateShaderResourceViewFromFile(g_device.m_device, 
+																							"seafloor.dds", 
+																							nullptr, 
+																							nullptr, 
+																							&g_pTextureRV, 
+																							nullptr);
 	if (FAILED(hr))
 		return hr;
 
@@ -405,7 +426,10 @@ CleanupDevice() {
 // Called every time the application receives a message
 //--------------------------------------------------------------------------------------
 LRESULT CALLBACK
-WndProc(HWND hWnd, unsigned int message, WPARAM wParam, LPARAM lParam) {
+WndProc(HWND hWnd, 
+				unsigned int message, 
+				WPARAM wParam, 
+				LPARAM lParam) {
 	PAINTSTRUCT ps;
 	HDC hdc;
 
@@ -428,10 +452,10 @@ WndProc(HWND hWnd, unsigned int message, WPARAM wParam, LPARAM lParam) {
 
 			// Redimensionar el swap chain
 			HRESULT hr = g_swapchain.m_swapchain->ResizeBuffers(0,
-				g_window.m_width,
-				g_window.m_height,
-				DXGI_FORMAT_R8G8B8A8_UNORM,
-				0);
+																													g_window.m_width,
+																													g_window.m_height,
+																													DXGI_FORMAT_R8G8B8A8_UNORM,
+																													0);
 			if (FAILED(hr)) {
 				MessageBox(hWnd, "Failed to resize swap chain buffers.", "Error", MB_OK);
 				PostQuitMessage(0);
@@ -439,8 +463,8 @@ WndProc(HWND hWnd, unsigned int message, WPARAM wParam, LPARAM lParam) {
 
 			// **3. RECREAR EL BACK BUFFER**
 			hr = g_swapchain.m_swapchain->GetBuffer(0,
-				__uuidof(ID3D11Texture2D),
-				reinterpret_cast<void**>(&g_backBuffer.m_texture));
+																							__uuidof(ID3D11Texture2D),
+																							reinterpret_cast<void**>(&g_backBuffer.m_texture));
 			if (FAILED(hr)) {
 				ERROR("SwapChain", "Resize", "Failed to get new back buffer");
 				return hr;
@@ -448,8 +472,8 @@ WndProc(HWND hWnd, unsigned int message, WPARAM wParam, LPARAM lParam) {
 
 			// **4. RECREAR EL RENDER TARGET VIEW**
 			hr = g_renderTargetView.init(g_device,
-				g_backBuffer,
-				DXGI_FORMAT_R8G8B8A8_UNORM);
+																	 g_backBuffer,
+																	 DXGI_FORMAT_R8G8B8A8_UNORM);
 			if (FAILED(hr)) {
 				ERROR("RenderTargetView", "Resize", "Failed to create new RenderTargetView");
 				return hr;
@@ -457,26 +481,25 @@ WndProc(HWND hWnd, unsigned int message, WPARAM wParam, LPARAM lParam) {
 
 			// **5. RECREAR EL DEPTH STENCIL VIEW**
 			hr = g_depthStencil.init(g_device,
-				g_window.m_width,
-				g_window.m_height,
-				DXGI_FORMAT_D24_UNORM_S8_UINT,
-				D3D11_BIND_DEPTH_STENCIL,
-				4,
-				0);
+															 g_window.m_width,
+															 g_window.m_height,
+															 DXGI_FORMAT_D24_UNORM_S8_UINT,
+															 D3D11_BIND_DEPTH_STENCIL,
+															 4,
+															 0);
 			if (FAILED(hr)) {
 				ERROR("DepthStencil", "Resize", "Failed to create new DepthStencil");
 				return hr;
 			}
 
 			hr = g_depthStencilView.init(g_device,
-				g_depthStencil,
-				DXGI_FORMAT_D24_UNORM_S8_UINT);
+																	 g_depthStencil,
+																	 DXGI_FORMAT_D24_UNORM_S8_UINT);
 			if (FAILED(hr)) {
 				ERROR("DepthStencilView", "Resize", "Failed to create new DepthStencilView");
 				return hr;
 			}
-			// Actualizar el viewport
-			//D3D11_VIEWPORT vp;
+			
 			vp.Width = static_cast<float>(g_window.m_width);
 			vp.Height = static_cast<float>(g_window.m_height);
 			vp.MinDepth = 0.0f;
@@ -486,10 +509,18 @@ WndProc(HWND hWnd, unsigned int message, WPARAM wParam, LPARAM lParam) {
 			g_deviceContext.RSSetViewports(1, &vp);
 
 			// Actualizar la proyección
-			g_Projection = XMMatrixPerspectiveFovLH(XM_PIDIV4, g_window.m_width / (float)g_window.m_height, 0.01f, 100.0f);
+			g_Projection = XMMatrixPerspectiveFovLH(XM_PIDIV4, 
+																							g_window.m_width / (float)g_window.m_height, 
+																							0.01f, 
+																							100.0f);
 			CBChangeOnResize cbChangesOnResize;
 			cbChangesOnResize.mProjection = XMMatrixTranspose(g_Projection);
-			g_deviceContext.UpdateSubresource(g_pCBChangeOnResize, 0, nullptr, &cbChangesOnResize, 0, 0);
+			g_deviceContext.UpdateSubresource(g_pCBChangeOnResize, 
+																				0, 
+																				nullptr, 
+																				&cbChangesOnResize, 
+																				0, 
+																				0);
 		}
 		break;
 
@@ -498,7 +529,10 @@ WndProc(HWND hWnd, unsigned int message, WPARAM wParam, LPARAM lParam) {
 		break;
 
 	default:
-		return DefWindowProc(hWnd, message, wParam, lParam);
+		return DefWindowProc(hWnd, 
+												 message,
+												 wParam, 
+												 lParam);
 	}
 
 	return 0;
@@ -508,7 +542,8 @@ WndProc(HWND hWnd, unsigned int message, WPARAM wParam, LPARAM lParam) {
 //--------------------------------------------------------------------------------------
 // Update frame-specific variables
 //--------------------------------------------------------------------------------------
-void update() {
+void 
+update() {
 	// Actualizar tiempo y rotación
 	static float t = 0.0f;
 	if (g_swapchain.m_driverType == D3D_DRIVER_TYPE_REFERENCE) {
@@ -534,29 +569,54 @@ void update() {
 	// Actualizar el buffer constante del frame
 	cb.mWorld = XMMatrixTranspose(g_World);
 	cb.vMeshColor = g_vMeshColor;
-	g_deviceContext.UpdateSubresource(g_pCBChangesEveryFrame, 0, nullptr, &cb, 0, 0);
+	g_deviceContext.UpdateSubresource(g_pCBChangesEveryFrame, 
+																		0, 
+																		nullptr, 
+																		&cb, 
+																		0, 
+																		0);
 
 	// Actualizar la matriz de proyección
-	g_Projection = XMMatrixPerspectiveFovLH(XM_PIDIV4, g_window.m_width / (float)g_window.m_height, 0.01f, 100.0f);
+	g_Projection = XMMatrixPerspectiveFovLH(XM_PIDIV4, 
+																					g_window.m_width / (float)g_window.m_height, 
+																					0.01f, 
+																					100.0f);
 
 	// Actualizar la vista (si es necesario cambiar dinámicamente)
 	cbNeverChanges.mView = XMMatrixTranspose(g_View);
-	g_deviceContext.UpdateSubresource(g_pCBNeverChanges, 0, nullptr, &cbNeverChanges, 0, 0);
+	g_deviceContext.UpdateSubresource(g_pCBNeverChanges, 
+																		0,
+																		nullptr, 
+																		&cbNeverChanges, 
+																		0, 
+																		0);
 
 	// Actualizar la proyección en el buffer constante
 	cbChangesOnResize.mProjection = XMMatrixTranspose(g_Projection);
-	g_deviceContext.UpdateSubresource(g_pCBChangeOnResize, 0, nullptr, &cbChangesOnResize, 0, 0);
+	g_deviceContext.UpdateSubresource(g_pCBChangeOnResize, 
+																		0, 
+																		nullptr, 
+																		&cbChangesOnResize, 
+																		0, 
+																		0);
 }
 
 //--------------------------------------------------------------------------------------
 // Render a frame
 //--------------------------------------------------------------------------------------
-void Render() {
+void 
+Render() {
 	// Limpiar los buffers
-	const float ClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f }; // red, green, blue, alpha
+	const float ClearColor[4] = { 0.0f, 
+																0.125f, 
+																0.3f, 
+																1.0f }; // red, green, blue, alpha
 
 	// Set Render Target View
-	g_renderTargetView.render(g_deviceContext, g_depthStencilView, 1, ClearColor);
+	g_renderTargetView.render(g_deviceContext, 
+														g_depthStencilView, 
+														1, 
+														ClearColor);
 
 	// Set Viewport
 	g_deviceContext.RSSetViewports(1, &vp);
@@ -566,24 +626,44 @@ void Render() {
 
 	// Configurar los buffers y shaders para el pipeline
 	g_deviceContext.IASetInputLayout(g_pVertexLayout);
-	g_deviceContext.IASetVertexBuffers(0, 1, &g_pVertexBuffer, &stride, &offset);
-	g_deviceContext.IASetIndexBuffer(g_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
+	g_deviceContext.IASetVertexBuffers(0, 
+																		 1, 
+																		 &g_pVertexBuffer, 
+																		 &stride, 
+																		 &offset);
+	g_deviceContext.IASetIndexBuffer(g_pIndexBuffer, 
+																	 DXGI_FORMAT_R16_UINT, 
+																	 0);
 	g_deviceContext.IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// Asignar shaders y buffers constantes
-	g_deviceContext.VSSetShader(g_pVertexShader, nullptr, 0);
-	g_deviceContext.VSSetConstantBuffers(0, 1, &g_pCBNeverChanges);
-	g_deviceContext.VSSetConstantBuffers(1, 1, &g_pCBChangeOnResize);
-	g_deviceContext.VSSetConstantBuffers(2, 1, &g_pCBChangesEveryFrame);
+	g_deviceContext.VSSetShader(g_pVertexShader,
+															nullptr, 
+															0);
+	g_deviceContext.VSSetConstantBuffers(0, 
+																			 1, 
+																			 &g_pCBNeverChanges);
+	g_deviceContext.VSSetConstantBuffers(1, 
+																			 1, 
+																			 &g_pCBChangeOnResize);
+	g_deviceContext.VSSetConstantBuffers(2, 
+																			 1, 
+																			 &g_pCBChangesEveryFrame);
 
-	g_deviceContext.PSSetShader(g_pPixelShader, nullptr, 0);
-	g_deviceContext.PSSetConstantBuffers(2, 1, &g_pCBChangesEveryFrame);
-	g_deviceContext.PSSetShaderResources(0, 1, &g_pTextureRV);
-	g_deviceContext.PSSetSamplers(0, 1, &g_pSamplerLinear);
+	g_deviceContext.PSSetShader(g_pPixelShader, 
+															nullptr, 
+															0);
+	g_deviceContext.PSSetConstantBuffers(2, 
+																			 1, 
+																			 &g_pCBChangesEveryFrame);
+	g_deviceContext.PSSetShaderResources(0, 
+																			 1, 
+																			 &g_pTextureRV);
+	g_deviceContext.PSSetSamplers(0, 
+																1, 
+																&g_pSamplerLinear);
 
-	// Dibujar
 	g_deviceContext.DrawIndexed(36, 0, 0);
 
-	// Presentar el frame en pantalla
 	g_swapchain.present();
 }

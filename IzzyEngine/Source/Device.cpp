@@ -21,7 +21,9 @@ Device::CreateRenderTargetView(ID3D11Resource* pResource,
 	}
 
 	//Crear el render target view
-	HRESULT hr = m_device->CreateRenderTargetView(pResource, pDesc, ppRTView);
+	HRESULT hr = m_device->CreateRenderTargetView(pResource, 
+																								pDesc, 
+																								ppRTView);
 
 	if (SUCCEEDED(hr)) {
 		MESSAGE("Device", "CreateRenderTargetView", "Render Target View created Successfully");

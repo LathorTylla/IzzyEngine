@@ -2,7 +2,9 @@
 #include "Window.h"
 
 HRESULT
-Window::init(HINSTANCE hInstance, int nCmdShow, WNDPROC wndproc) {
+Window::init(HINSTANCE hInstance, 
+						 int nCmdShow, 
+						 WNDPROC wndproc) {
 
 	m_hInst = hInstance;
 
@@ -32,7 +34,9 @@ Window::init(HINSTANCE hInstance, int nCmdShow, WNDPROC wndproc) {
 	RECT rc = { 0, 0, 1200, 1080 };
 	m_rect = rc;
 
-	AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
+	AdjustWindowRect(&rc, 
+									 WS_OVERLAPPEDWINDOW, 
+									 FALSE);
 
 	m_hWnd = CreateWindow("TutorialWindowClass",
 												m_windowName.c_str(),

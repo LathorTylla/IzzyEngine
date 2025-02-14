@@ -38,18 +38,16 @@ SwapChain::init(Device& device,
   // Intentar crear el dispositivo con cada driver
   for (unsigned int driverTypeIndex = 0; driverTypeIndex < numDriverTypes; driverTypeIndex++) {
     m_driverType = driverTypes[driverTypeIndex];
-    hr = D3D11CreateDevice(
-      nullptr,
-      m_driverType,
-      nullptr,
-      createDeviceFlags,
-      featureLevels,
-      numFeatureLevels,
-      D3D11_SDK_VERSION,
-      &device.m_device,
-      &m_featureLevel,
-      &deviceContext.m_deviceContext
-    );
+    hr = D3D11CreateDevice( nullptr,
+                            m_driverType,
+                            nullptr,
+                            createDeviceFlags,
+                            featureLevels,
+                            numFeatureLevels,
+                            D3D11_SDK_VERSION,
+                            &device.m_device,
+                            &m_featureLevel,
+                            &deviceContext.m_deviceContext);
     if (SUCCEEDED(hr))
       break;
   }
@@ -59,7 +57,9 @@ SwapChain::init(Device& device,
   }
   // Configurar MSAA
   m_sampleCount = 4;
-  hr = device.m_device->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, m_sampleCount, &m_qualityLevels);
+  hr = device.m_device->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 
+                                                      m_sampleCount, 
+                                                      &m_qualityLevels);
   if (FAILED(hr) || m_qualityLevels == 0) {
     ERROR("SwapChain", "init", "MSAA not supported or invalid quality level");
     return hr;
@@ -81,7 +81,8 @@ SwapChain::init(Device& device,
   sd.SampleDesc.Quality = m_qualityLevels - 1;  // Máxima calidad
 
   // Obtener la fábrica DXGI
-  hr = device.m_device->QueryInterface(__uuidof(IDXGIDevice), reinterpret_cast<void**>(&m_dxgiDevice));
+  hr = device.m_device->QueryInterface(__uuidof(IDXGIDevice), 
+                                       reinterpret_cast<void**>(&m_dxgiDevice));
   if (FAILED(hr)) {
     ERROR("SwapChain", "init", "Failed to query IDXGIDevice");
     return hr;
@@ -91,19 +92,24 @@ SwapChain::init(Device& device,
     ERROR("SwapChain", "init", "Failed to get DXGI Adapter");
     return hr;
   }
-  hr = m_dxgiAdapter->GetParent(__uuidof(IDXGIFactory), reinterpret_cast<void**>(&m_dxgiFactory));
+  hr = m_dxgiAdapter->GetParent(__uuidof(IDXGIFactory), 
+                                reinterpret_cast<void**>(&m_dxgiFactory));
   if (FAILED(hr)) {
     ERROR("SwapChain", "init", "Failed to get DXGI Factory");
     return hr;
   }
   // Crear SwapChain
-  hr = m_dxgiFactory->CreateSwapChain(device.m_device, &sd, &m_swapchain);
+  hr = m_dxgiFactory->CreateSwapChain(device.m_device, 
+                                      &sd, 
+                                      &m_swapchain);
   if (FAILED(hr)) {
     ERROR("SwapChain", "init", "Failed to create SwapChain");
     return hr;
   }
   // Obtener el buffer trasero
-  hr = m_swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&backBuffer.m_texture));
+  hr = m_swapchain->GetBuffer(0, 
+                              __uuidof(ID3D11Texture2D), 
+                              reinterpret_cast<void**>(&backBuffer.m_texture));
   if (FAILED(hr)) {
     ERROR("SwapChain", "init", "Failed to get SwapChain buffer");
     return hr;

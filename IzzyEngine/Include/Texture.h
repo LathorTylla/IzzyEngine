@@ -1,61 +1,91 @@
 #pragma once
 #include "Prerequisites.h"
-class Device;
-class DeviceContext;
+
+/*
+ * @brief Forward Declarations.
+ *
+ * Declaración anticipada de clases para optimizar compilación y evitar dependencias circulares.
+ */
+class Device;         /* Encargado de la creación y gestión de recursos gráficos. */
+class DeviceContext;  /* Encargado de asignar y ejecutar los recursos gráficos. */
+
+/*
+ * @brief Texture.
+ *
+ * Clase encargada de la creación y manipulación de texturas en DirectX 11.
+ * Permite cargar texturas desde archivos o crearlas en memoria.
+ */
 class
-  Texture {
+Texture {
 public:
-  Texture() = default;
-  ~Texture() = default;
-  /// <summary>
-  /// Brief: Crea una textura a partir de una imagen (.dds) desde nuestro ordenador.
-  /// </summary>
-  /// <param name="device">: Llamamos al device para poder generar los recursos en memoria. </param>
-  /// <param name="textureName">: Almacenamos el nombre de la textura, para cargala desde memoria. </param>
+  Texture() = default;  //constructor por defecto
+  ~Texture() = default; //destructor por defecto
+  /*
+   * @brief Crea una textura a partir de una imagen en el ordenador.
+   *
+   * @param device       Dispositivo encargado de la gestión de recursos en memoria.
+   * @param textureName  Nombre de la textura para su carga en memoria.
+   * @param extensionType Tipo de extensión de la imagen (DDS, PNG, JPG).
+   * @return            Devuelve un HRESULT indicando el éxito o fallo de la operación.
+   */
+  HRESULT
+  init(Device device,
+       const std::string& textureName,
+       ExtensionType extensionType);
+  /*
+   * @brief Crea una textura 2D en memoria a partir de datos proporcionados por el desarrollador.
+   *
+   * @param device        Proporciona los recursos necesarios para crear la textura.
+   * @param width         Ancho de la textura.
+   * @param height        Alto de la textura.
+   * @param Format        Formato de la textura en memoria.
+   * @param BindFlags     Clasificación de la textura según su uso.
+   * @param sampleCount   Número de muestras para anti-aliasing (opcional, por defecto 1).
+   * @param qualityLevels Niveles de calidad para el muestreo (opcional, por defecto 0).
+   * @return             Devuelve un HRESULT indicando el éxito o fallo de la operación.
+   */
   HRESULT
     init(Device device,
-      const std::string& textureName,
-      ExtensionType extensionType);
-  /// <summary>
-  /// Brief: This method is responsible for creating a 2D Texture from the data provided
-  /// by the developer.
-  /// </summary>
-  /// <param name="device">: It is in charge of providing the resources to create the 2D texture.</param>
-  /// <param name="width">: It will take the width of our window.</param>
-  /// <param name="height">: It will take the height of our window.</param>
-  /// <param name="Format">: It is a classifier that will allow bit spaces to be created correctly in memory.</param>
-  /// <param name="BindFlags">: It is a characteristic to classify the type of texture that is being created.</param>
-  HRESULT
-    init(Device device,
-      unsigned int width,
-      unsigned int height,
-      DXGI_FORMAT Format,
-      unsigned int BindFlags,
-      unsigned int sampleCount = 1,
-      unsigned int qualityLevels = 0);
-  /// <summary>
-  /// Brief: This method is in charge of updating the logic of the texture
-  /// </summary>
+         unsigned int width,
+         unsigned int height,
+         DXGI_FORMAT Format,
+         unsigned int BindFlags,
+         unsigned int sampleCount = 1,
+         unsigned int qualityLevels = 0);
+  /*
+   * @brief Actualiza la lógica de la textura si es necesario.
+   */
   void
-    update();
+  update();
 
-  /// <summary>
-  /// Brief: This method is in charge of drawing the resources on the screen. (only if necessary)
-  /// </summary>
-  /// <param name="deviceContext">: It is in charge of assigning resources to be used.</param>
-  /// <param name="StartSlot">: It is in charge of assigning the starting point in memory. 
-  /// We recommend checking that it is not spliced ??in memory with other resources.</param>
+  /*
+   * @brief Dibuja los recursos de la textura en la pantalla (solo si es necesario).
+   *
+   * @param deviceContext Administra la asignación de los recursos para su uso.
+   * @param StartSlot     Define el punto inicial en memoria para la textura.
+   * @param NumViews      Cantidad de vistas asignadas a la textura.
+   */
   void
-    render(DeviceContext& deviceContext, unsigned int StartSlot, unsigned int NumViews);
-  /// <summary>
-  /// Brief: This method is in charge of releasing the resources stored in the class's memory.
-  /// </summary>
+  render(DeviceContext& deviceContext, 
+         unsigned int StartSlot, 
+         unsigned int NumViews);
+  /*
+   * @brief Libera los recursos almacenados en memoria por la textura.
+   */
   void
-    destroy();
+  destroy();
 
 public:
-  // This variable is in charge of handle a texture resource as data
+  /*
+   * @brief Puntero a ID3D11Texture2D.
+   *
+   * Maneja la textura como un recurso en memoria.
+   */
   ID3D11Texture2D* m_texture = nullptr;
-  // This variable is in charge of handle a texture resource as image data
+  /*
+   * @brief Puntero a ID3D11ShaderResourceView.
+   *
+   * Permite utilizar la textura como un recurso de imagen en los shaders.
+   */
   ID3D11ShaderResourceView* m_textureFromImg;
 };

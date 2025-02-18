@@ -1,5 +1,10 @@
 #include "Device.h"
 
+void
+Device::destroy() {
+	SAFE_RELEASE(m_device);
+}
+
 HRESULT
 Device::CreateRenderTargetView(ID3D11Resource* pResource,
 															 const D3D11_RENDER_TARGET_VIEW_DESC* pDesc,
@@ -16,7 +21,9 @@ Device::CreateRenderTargetView(ID3D11Resource* pResource,
 	}
 
 	//Crear el render target view
-	HRESULT hr = m_device->CreateRenderTargetView(pResource, pDesc, ppRTView);
+	HRESULT hr = m_device->CreateRenderTargetView(pResource, 
+																								pDesc, 
+																								ppRTView);
 
 	if (SUCCEEDED(hr)) {
 		MESSAGE("Device", "CreateRenderTargetView", "Render Target View created Successfully");

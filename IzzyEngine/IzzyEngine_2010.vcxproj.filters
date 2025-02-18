@@ -47,6 +47,12 @@
     <ClInclude Include="Include\stb_image.h">
       <Filter>Includes</Filter>
     </ClInclude>
+    <ClInclude Include="Include\DepthStencilView.h">
+      <Filter>Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\RenderTargetView.h">
+      <Filter>Includes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="IzzyEngine.cpp" />
@@ -66,6 +72,12 @@
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\Swapchain.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\RenderTargetView.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DepthStencilView.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>

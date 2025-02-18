@@ -53,6 +53,12 @@
     <ClInclude Include="Include\RenderTargetView.h">
       <Filter>Includes</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Viewport.h">
+      <Filter>Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\InputLayout.h">
+      <Filter>Includes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="IzzyEngine.cpp" />
@@ -78,6 +84,12 @@
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\DepthStencilView.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Viewport.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\InputLayout.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>

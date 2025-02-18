@@ -6,6 +6,8 @@
 #include "Texture.h"
 #include "RenderTargetView.h"
 #include "DepthStencilView.h"
+#include "Viewport.h"
+#include "InputLayout.h"
 
 // Global Variables
 Window															g_window;
@@ -16,10 +18,12 @@ Texture															g_backBuffer;
 Texture															g_depthStencil;
 RenderTargetView										g_renderTargetView;
 DepthStencilView										g_depthStencilView;
+Viewport														g_viewport;
+InputLayout													g_inputLayout;
 
 ID3D11VertexShader*									g_pVertexShader = nullptr;
 ID3D11PixelShader*									g_pPixelShader = nullptr;
-ID3D11InputLayout*									g_pVertexLayout = nullptr;
+//ID3D11InputLayout*									g_pVertexLayout = nullptr;
 ID3D11Buffer*												g_pVertexBuffer = nullptr;
 ID3D11Buffer*												g_pIndexBuffer = nullptr;
 ID3D11Buffer*												g_pCBNeverChanges = nullptr;
@@ -35,7 +39,7 @@ XMFLOAT4                            g_vMeshColor(0.7f, 0.7f, 0.7f, 1.0f);
 CBChangesEveryFrame cb;
 CBNeverChanges cbNeverChanges;
 CBChangeOnResize cbChangesOnResize;
-D3D11_VIEWPORT vp;
+//D3D11_VIEWPORT vp;
 unsigned int stride = sizeof(SimpleVertex);
 unsigned int offset = 0;
 //--------------------------------------------------------------------------------------
@@ -174,13 +178,11 @@ InitDevice() {
 		return hr;
 
 	// Setup the viewport
+	hr = g_viewport.init(g_window);
+  if (FAILED(hr)) {
+    return hr;
+  }
 
-	vp.Width = (float)g_window.m_width;
-	vp.Height = (float)g_window.m_height;
-	vp.MinDepth = 0.0f;
-	vp.MaxDepth = 1.0f;
-	vp.TopLeftX = 0;
-	vp.TopLeftY = 0;
 
 	// Compile the vertex shader
 	ID3DBlob* pVSBlob = nullptr;
@@ -205,21 +207,33 @@ InitDevice() {
 	}
 
 	// Define the input layout
-	D3D11_INPUT_ELEMENT_DESC
-		layout[] = {
-				{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-				{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	};
-	unsigned int numElements = ARRAYSIZE(layout);
-
+  std::vector<D3D11_INPUT_ELEMENT_DESC> Layout;
 	// Create the input layout
-	hr = g_device.CreateInputLayout(layout, 
-																 numElements, 
-																 pVSBlob->GetBufferPointer(),
-	pVSBlob->GetBufferSize(), &g_pVertexLayout);
-	pVSBlob->Release();
-	if (FAILED(hr))
-		return hr;
+  D3D11_INPUT_ELEMENT_DESC position;
+  position.SemanticName = "POSITION";
+  position.SemanticIndex = 0;
+  position.Format = DXGI_FORMAT_R32G32B32_FLOAT;
+  position.InputSlot = 0;
+  position.AlignedByteOffset =D3D11_APPEND_ALIGNED_ELEMENT;
+  position.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+  position.InstanceDataStepRate = 0;
+  Layout.push_back(position);
+
+  D3D11_INPUT_ELEMENT_DESC texcoord;
+  texcoord.SemanticName = "TEXCOORD";
+  texcoord.SemanticIndex = 0;
+  texcoord.Format = DXGI_FORMAT_R32G32_FLOAT;
+  texcoord.InputSlot = 0;
+  texcoord.AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+  texcoord.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+  texcoord.InstanceDataStepRate = 0;
+  Layout.push_back(texcoord);
+  
+	hr = g_inputLayout.init(g_device, 
+													Layout, 
+													pVSBlob);
+  if (FAILED(hr))
+    return hr;
 
 	// Set the input layout
 
@@ -409,16 +423,19 @@ CleanupDevice() {
 	if (g_pCBChangesEveryFrame) g_pCBChangesEveryFrame->Release();
 	if (g_pVertexBuffer) g_pVertexBuffer->Release();
 	if (g_pIndexBuffer) g_pIndexBuffer->Release();
-	if (g_pVertexLayout) g_pVertexLayout->Release();
+	//if (g_pVertexLayout) g_pVertexLayout->Release();
+	g_inputLayout.destroy();
 	if (g_pVertexShader) g_pVertexShader->Release();
 	if (g_pPixelShader) g_pPixelShader->Release();
 
+  
 	g_depthStencil.destroy();
 	g_depthStencilView.destroy();
 	g_renderTargetView.destroy();
 	g_swapchain.destroy();
 	g_deviceContext.destroy();
 	g_device.destroy();
+	
 }
 
 
@@ -500,13 +517,11 @@ WndProc(HWND hWnd,
 				return hr;
 			}
 			
-			vp.Width = static_cast<float>(g_window.m_width);
-			vp.Height = static_cast<float>(g_window.m_height);
-			vp.MinDepth = 0.0f;
-			vp.MaxDepth = 1.0f;
-			vp.TopLeftX = 0;
-			vp.TopLeftY = 0;
-			g_deviceContext.RSSetViewports(1, &vp);
+      hr = g_viewport.init(g_window);
+      if (FAILED(hr)) {
+        ERROR("Viewport", "Resize", "Failed to create new Viewport");
+        return hr;
+      }
 
 			// Actualizar la proyección
 			g_Projection = XMMatrixPerspectiveFovLH(XM_PIDIV4, 
@@ -619,13 +634,14 @@ Render() {
 														ClearColor);
 
 	// Set Viewport
-	g_deviceContext.RSSetViewports(1, &vp);
-
+	//g_deviceContext.RSSetViewports(1, &vp);
+  g_viewport.render(g_deviceContext);
 	// Set Depth Stencil View
 	g_depthStencilView.render(g_deviceContext);
 
 	// Configurar los buffers y shaders para el pipeline
-	g_deviceContext.IASetInputLayout(g_pVertexLayout);
+	//g_deviceContext.IASetInputLayout(g_pVertexLayout);
+  g_inputLayout.render(g_deviceContext);
 	g_deviceContext.IASetVertexBuffers(0, 
 																		 1, 
 																		 &g_pVertexBuffer, 

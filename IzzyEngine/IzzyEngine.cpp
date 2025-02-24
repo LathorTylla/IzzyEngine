@@ -7,7 +7,8 @@
 #include "RenderTargetView.h"
 #include "DepthStencilView.h"
 #include "Viewport.h"
-#include "InputLayout.h"
+//#include "InputLayout.h"
+#include "ShaderProgram.h"
 
 // Global Variables
 Window															g_window;
@@ -19,10 +20,11 @@ Texture															g_depthStencil;
 RenderTargetView										g_renderTargetView;
 DepthStencilView										g_depthStencilView;
 Viewport														g_viewport;
-InputLayout													g_inputLayout;
+//InputLayout													g_inputLayout;
+ShaderProgram												g_shaderProgram;
 
-ID3D11VertexShader*									g_pVertexShader = nullptr;
-ID3D11PixelShader*									g_pPixelShader = nullptr;
+//ID3D11VertexShader*									g_pVertexShader = nullptr;
+//ID3D11PixelShader*									g_pPixelShader = nullptr;
 //ID3D11InputLayout*									g_pVertexLayout = nullptr;
 ID3D11Buffer*												g_pVertexBuffer = nullptr;
 ID3D11Buffer*												g_pIndexBuffer = nullptr;
@@ -96,41 +98,6 @@ wWinMain(HINSTANCE hInstance,
 //--------------------------------------------------------------------------------------
 // Helper for compiling shaders with D3DX11
 //--------------------------------------------------------------------------------------
-HRESULT
-CompileShaderFromFile(char* szFileName, 
-											LPCSTR szEntryPoint, 
-											LPCSTR szShaderModel, 
-											ID3DBlob** ppBlobOut) {
-	HRESULT hr = S_OK;
-
-	DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
-#if defined( DEBUG ) || defined( _DEBUG )
-	
-	dwShaderFlags |= D3DCOMPILE_DEBUG;
-#endif
-
-	ID3DBlob* pErrorBlob;
-	hr = D3DX11CompileFromFile(szFileName, 
-														 nullptr, 
-														 nullptr, 
-														 szEntryPoint, 
-														 szShaderModel,
-														 dwShaderFlags, 
-														 0, 
-														 nullptr, 
-														 ppBlobOut, 
-														 &pErrorBlob, 
-														 nullptr);
-	if (FAILED(hr)) {
-		if (pErrorBlob != nullptr)
-			OutputDebugStringA((char*)pErrorBlob->GetBufferPointer());
-		if (pErrorBlob) pErrorBlob->Release();
-		return hr;
-	}
-	if (pErrorBlob) pErrorBlob->Release();
-
-	return S_OK;
-}
 
 
 //--------------------------------------------------------------------------------------
@@ -185,26 +152,7 @@ InitDevice() {
 
 
 	// Compile the vertex shader
-	ID3DBlob* pVSBlob = nullptr;
-	hr = CompileShaderFromFile("IzzyEngine.fx", 
-														 "VS", 
-														 "vs_4_0", 
-														 &pVSBlob);
-	if (FAILED(hr)) {
-		MessageBox(nullptr,
-			"The FX file cannot be compiled.  Please run this executable from the directory that contains the FX file.", "Error", MB_OK);
-		return hr;
-	}
-
-	// Create the vertex shader
-	hr = g_device.CreateVertexShader(pVSBlob->GetBufferPointer(), 
-																	 pVSBlob->GetBufferSize(), 
-																	 nullptr, 
-																	 &g_pVertexShader);
-	if (FAILED(hr)) {
-		pVSBlob->Release();
-		return hr;
-	}
+	
 
 	// Define the input layout
   std::vector<D3D11_INPUT_ELEMENT_DESC> Layout;
@@ -229,32 +177,12 @@ InitDevice() {
   texcoord.InstanceDataStepRate = 0;
   Layout.push_back(texcoord);
   
-	hr = g_inputLayout.init(g_device, 
-													Layout, 
-													pVSBlob);
-  if (FAILED(hr))
-    return hr;
+  hr = g_shaderProgram.init(g_device, "IzzyEngine.fx", Layout);
 
 	// Set the input layout
 
 	// Compile the pixel shader
-	ID3DBlob* pPSBlob = nullptr;
-	hr = CompileShaderFromFile("IzzyEngine.fx", 
-														 "PS", 
-														 "ps_4_0", 
-														 &pPSBlob);
-	if (FAILED(hr)) {
-		MessageBox(nullptr,
-			"The FX file cannot be compiled.  Please run this executable from the directory that contains the FX file.", "Error", MB_OK);
-		return hr;
-	}
 
-	// Create the pixel shader
-	hr = g_device.CreatePixelShader(pPSBlob->GetBufferPointer(), 
-																	pPSBlob->GetBufferSize(),
-																	nullptr, 
-																	&g_pPixelShader);
-	pPSBlob->Release();
 	if (FAILED(hr))
 		return hr;
 
@@ -424,9 +352,10 @@ CleanupDevice() {
 	if (g_pVertexBuffer) g_pVertexBuffer->Release();
 	if (g_pIndexBuffer) g_pIndexBuffer->Release();
 	//if (g_pVertexLayout) g_pVertexLayout->Release();
-	g_inputLayout.destroy();
-	if (g_pVertexShader) g_pVertexShader->Release();
-	if (g_pPixelShader) g_pPixelShader->Release();
+	//g_inputLayout.destroy();
+	//if (g_pVertexShader) g_pVertexShader->Release();
+	//if (g_pPixelShader) g_pPixelShader->Release();
+  g_shaderProgram.destroy();
 
   
 	g_depthStencil.destroy();
@@ -641,7 +570,8 @@ Render() {
 
 	// Configurar los buffers y shaders para el pipeline
 	//g_deviceContext.IASetInputLayout(g_pVertexLayout);
-  g_inputLayout.render(g_deviceContext);
+  //g_inputLayout.render(g_deviceContext);
+  g_shaderProgram.render(g_deviceContext);
 	g_deviceContext.IASetVertexBuffers(0, 
 																		 1, 
 																		 &g_pVertexBuffer, 
@@ -652,10 +582,6 @@ Render() {
 																	 0);
 	g_deviceContext.IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	// Asignar shaders y buffers constantes
-	g_deviceContext.VSSetShader(g_pVertexShader,
-															nullptr, 
-															0);
 	g_deviceContext.VSSetConstantBuffers(0, 
 																			 1, 
 																			 &g_pCBNeverChanges);
@@ -666,9 +592,6 @@ Render() {
 																			 1, 
 																			 &g_pCBChangesEveryFrame);
 
-	g_deviceContext.PSSetShader(g_pPixelShader, 
-															nullptr, 
-															0);
 	g_deviceContext.PSSetConstantBuffers(2, 
 																			 1, 
 																			 &g_pCBChangesEveryFrame);

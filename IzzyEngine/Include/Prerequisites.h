@@ -112,3 +112,9 @@ ExtensionType {
   PNG = 1,      /* Formato PNG, comprimido sin pérdida de calidad. */
   JPG = 2       /* Formato JPG, comprimido con pérdida de calidad. */
 };
+
+enum 
+ShaderType {
+  VERTEX_SHADER = 0,
+  PIXEL_SHADER = 1
+};

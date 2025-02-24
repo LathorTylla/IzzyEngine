@@ -436,6 +436,7 @@
     <ClCompile Include="Source\DeviceContext.cpp" />
     <ClCompile Include="Source\InputLayout.cpp" />
     <ClCompile Include="Source\RenderTargetView.cpp" />
+    <ClCompile Include="Source\ShaderProgram.cpp" />
     <ClCompile Include="Source\Swapchain.cpp" />
     <ClCompile Include="Source\Texture.cpp" />
     <ClCompile Include="Source\Viewport.cpp" />
@@ -449,6 +450,7 @@
     <ClInclude Include="Include\DepthStencilView.h" />
     <ClInclude Include="Include\Device.h" />
     <ClInclude Include="Include\DeviceContext.h" />
+    <ClInclude Include="Include\ShaderProgram.h" />
     <ClInclude Include="Include\InputLayout.h" />
     <ClInclude Include="Include\Prerequisites.h" />
     <ClInclude Include="Include\RenderTargetView.h" />

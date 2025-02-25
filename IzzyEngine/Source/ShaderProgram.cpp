@@ -3,7 +3,9 @@
 #include "DeviceContext.h"
 
 HRESULT
-ShaderProgram::init(Device& device, const std::string& fileName, std::vector<D3D11_INPUT_ELEMENT_DESC> Layout) {
+ShaderProgram::init(Device& device, 
+										const std::string& fileName, 
+										std::vector<D3D11_INPUT_ELEMENT_DESC> Layout) {
 	if (!device.m_device) {
 		ERROR("ShaderProgram", "init", "Device is nullptr");
 		return E_POINTER;
@@ -54,7 +56,8 @@ ShaderProgram::destroy() {
 }
 
 HRESULT
-ShaderProgram::CreateInputLayout(Device& device, std::vector<D3D11_INPUT_ELEMENT_DESC> Layout) {
+ShaderProgram::CreateInputLayout(Device& device, 
+																 std::vector<D3D11_INPUT_ELEMENT_DESC> Layout) {
 	if (!m_vertexShaderData) {
 		ERROR("ShaderProgram", "CreateInputLayout", "VertexShaderData is nullptr");
 		return E_POINTER;
@@ -71,7 +74,8 @@ ShaderProgram::CreateInputLayout(Device& device, std::vector<D3D11_INPUT_ELEMENT
 }
 
 HRESULT
-ShaderProgram::CreateShader(Device& device, ShaderType type) {
+ShaderProgram::CreateShader(Device& device, 
+														ShaderType type) {
 	HRESULT hr = S_OK;
 	ID3DBlob* shaderData = nullptr;
 	const char* shaderEntryPoint = (type == PIXEL_SHADER) ? "PS" : "VS";
@@ -120,8 +124,10 @@ ShaderProgram::CreateShader(Device& device, ShaderType type) {
 	return S_OK;
 }
 
-HRESULT ShaderProgram::CompileShaderFromFile(char* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut)
-{
+HRESULT ShaderProgram::CompileShaderFromFile(char* szFileName, 
+																						 LPCSTR szEntryPoint, 
+																						 LPCSTR szShaderModel, 
+																						 ID3DBlob** ppBlobOut){
 	HRESULT hr = S_OK;
 
 	DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
@@ -134,8 +140,17 @@ HRESULT ShaderProgram::CompileShaderFromFile(char* szFileName, LPCSTR szEntryPoi
 #endif
 
 	ID3DBlob* pErrorBlob;
-	hr = D3DX11CompileFromFile(szFileName, nullptr, nullptr, szEntryPoint, szShaderModel,
-		dwShaderFlags, 0, nullptr, ppBlobOut, &pErrorBlob, nullptr);
+	hr = D3DX11CompileFromFile(szFileName, 
+														 nullptr, 
+														 nullptr, 
+														 szEntryPoint,
+														 szShaderModel,
+														 dwShaderFlags, 
+														 0, 
+														 nullptr,
+														 ppBlobOut, 
+														 &pErrorBlob, 
+														 nullptr);
 	if (FAILED(hr)) {
 		if (pErrorBlob != nullptr)
 			//std::string error = std::string("Shader compilation error: ") +

@@ -62,6 +62,12 @@
     <ClInclude Include="Include\ShaderProgram.h">
       <Filter>Includes</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Buffer.h">
+      <Filter>Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MeshComponent.h">
+      <Filter>Includes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="IzzyEngine.cpp" />
@@ -96,6 +102,9 @@
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\ShaderProgram.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Buffer.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>

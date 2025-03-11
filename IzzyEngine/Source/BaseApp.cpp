@@ -178,8 +178,12 @@ BaseApp::init() {
   if (FAILED(hr))
     return hr;
 
+  //Matriz de identidad
+  scale.x = 1;
+  scale.y = 1;
+  scale.z = 1;
   // Initialize the world matrices
-  g_World = XMMatrixIdentity();
+  g_modelMatrix = XMMatrixIdentity();
 
   // Initialize the view matrix
   XMVECTOR Eye = XMVectorSet(0.0f, 3.0f, -6.0f, 0.0f);
@@ -206,8 +210,15 @@ BaseApp::update() {
     t = (dwTimeCur - dwTimeStart) / 1000.0f;
   }
 
+  //rotation.y = t;
+  //Esto seria como nuestro transform
   // Actualizar la rotación del objeto y el color
-  g_World = XMMatrixRotationY(t);
+  XMMATRIX scaleMatrix = XMMatrixScaling(scale.x, scale.y, scale.z);
+  XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
+  XMMATRIX translationMatrix = XMMatrixTranslation(position.x, position.y, position.z);
+
+  // Actualizar la matriz del modelo por escala, rotación y traslación
+  g_modelMatrix = scaleMatrix * rotationMatrix * translationMatrix;
   g_vMeshColor = XMFLOAT4(
     (sinf(t * 1.0f) + 1.0f) * 0.5f,
     (cosf(t * 3.0f) + 1.0f) * 0.5f,
@@ -215,8 +226,9 @@ BaseApp::update() {
     1.0f
   );
 
+  // componer la matriz en orden de escala, rotacion y traslación
   // Actualizar el buffer constante del frame
-  cb.mWorld = XMMatrixTranspose(g_World);
+  cb.mWorld = XMMatrixTranspose(g_modelMatrix);
   cb.vMeshColor = g_vMeshColor;
   g_changeEveryFrame.update(g_deviceContext, 0, nullptr, &cb, 0, 0);
 

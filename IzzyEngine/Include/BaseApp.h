@@ -95,10 +95,14 @@ public:
   SamplerState 												g_samplerState;
   //ID3D11ShaderResourceView*           g_pTextureRV = nullptr;
   //ID3D11SamplerState*                 g_pSamplerLinear = nullptr;
-  XMMATRIX                            g_World;
+  XMMATRIX                            g_modelMatrix;
   XMMATRIX                            g_View;
   XMMATRIX                            g_Projection;
   XMFLOAT4                            g_vMeshColor;
+
+  XMFLOAT3                            position;
+  XMFLOAT3                            rotation;
+  XMFLOAT3                            scale;
 
   CBChangesEveryFrame cb;
   CBNeverChanges cbNeverChanges;

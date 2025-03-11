@@ -2,19 +2,305 @@
 
 HRESULT
 BaseApp::init() {
+  HRESULT hr = S_OK;
+
+  // Create Swapchain and BackBuffer
+  hr = g_swapchain.init(g_device, 
+                        g_deviceContext, 
+                        g_backBuffer, 
+                        g_window);
+  if (FAILED(hr)) {
+    return hr;
+  }
+
+  // Create a render target view
+  hr = g_renderTargetView.init(g_device,
+                               g_backBuffer,
+                               DXGI_FORMAT_R8G8B8A8_UNORM);
+
+  if (FAILED(hr)) {
+    return hr;
+  }
+
+  // Create a depth stencil
+  hr = g_depthStencil.init(g_device,
+                           g_window.m_width,
+                           g_window.m_height,
+                           DXGI_FORMAT_D24_UNORM_S8_UINT,
+                           D3D11_BIND_DEPTH_STENCIL,
+                           4,
+                           0);
+  if (FAILED(hr))
+    return hr;
+
+  // Create the depth stencil view
+  hr = g_depthStencilView.init(g_device,
+                               g_depthStencil,
+                               DXGI_FORMAT_D24_UNORM_S8_UINT);
+
+  if (FAILED(hr))
+    return hr;
+
+
+  // Setup the viewport
+  hr = g_viewport.init(g_window);
+
+  if (FAILED(hr))
+    return hr;
+
+  // Define the input layout
+  std::vector<D3D11_INPUT_ELEMENT_DESC> Layout;
+
+  D3D11_INPUT_ELEMENT_DESC position;
+  position.SemanticName = "POSITION";
+  position.SemanticIndex = 0;
+  position.Format = DXGI_FORMAT_R32G32B32_FLOAT;
+  position.InputSlot = 0;
+  position.AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT /*0*/;
+  position.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+  position.InstanceDataStepRate = 0;
+  Layout.push_back(position);
+
+  D3D11_INPUT_ELEMENT_DESC texcoord;
+  texcoord.SemanticName = "TEXCOORD";
+  texcoord.SemanticIndex = 0;
+  texcoord.Format = DXGI_FORMAT_R32G32_FLOAT;
+  texcoord.InputSlot = 0;
+  texcoord.AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT /*12*/;
+  texcoord.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+  texcoord.InstanceDataStepRate = 0;
+  Layout.push_back(texcoord);
+
+  // Create the Shader Program
+  hr = g_shaderProgram.init(g_device, "IzzyEngine.fx", Layout);
+
+  if (FAILED(hr))
+    return hr;
+
+  // Create vertex buffer
+  SimpleVertex
+    vertices[] = {
+        { XMFLOAT3(-1.0f, 1.0f, -1.0f), XMFLOAT2(0.0f, 0.0f) },
+        { XMFLOAT3(1.0f, 1.0f, -1.0f), XMFLOAT2(1.0f, 0.0f) },
+        { XMFLOAT3(1.0f, 1.0f, 1.0f), XMFLOAT2(1.0f, 1.0f) },
+        { XMFLOAT3(-1.0f, 1.0f, 1.0f), XMFLOAT2(0.0f, 1.0f) },
+
+        { XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT2(0.0f, 0.0f) },
+        { XMFLOAT3(1.0f, -1.0f, -1.0f), XMFLOAT2(1.0f, 0.0f) },
+        { XMFLOAT3(1.0f, -1.0f, 1.0f), XMFLOAT2(1.0f, 1.0f) },
+        { XMFLOAT3(-1.0f, -1.0f, 1.0f), XMFLOAT2(0.0f, 1.0f) },
+
+        { XMFLOAT3(-1.0f, -1.0f, 1.0f), XMFLOAT2(0.0f, 0.0f) },
+        { XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT2(1.0f, 0.0f) },
+        { XMFLOAT3(-1.0f, 1.0f, -1.0f), XMFLOAT2(1.0f, 1.0f) },
+        { XMFLOAT3(-1.0f, 1.0f, 1.0f), XMFLOAT2(0.0f, 1.0f) },
+
+        { XMFLOAT3(1.0f, -1.0f, 1.0f), XMFLOAT2(0.0f, 0.0f) },
+        { XMFLOAT3(1.0f, -1.0f, -1.0f), XMFLOAT2(1.0f, 0.0f) },
+        { XMFLOAT3(1.0f, 1.0f, -1.0f), XMFLOAT2(1.0f, 1.0f) },
+        { XMFLOAT3(1.0f, 1.0f, 1.0f), XMFLOAT2(0.0f, 1.0f) },
+
+        { XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT2(0.0f, 0.0f) },
+        { XMFLOAT3(1.0f, -1.0f, -1.0f), XMFLOAT2(1.0f, 0.0f) },
+        { XMFLOAT3(1.0f, 1.0f, -1.0f), XMFLOAT2(1.0f, 1.0f) },
+        { XMFLOAT3(-1.0f, 1.0f, -1.0f), XMFLOAT2(0.0f, 1.0f) },
+
+        { XMFLOAT3(-1.0f, -1.0f, 1.0f), XMFLOAT2(0.0f, 0.0f) },
+        { XMFLOAT3(1.0f, -1.0f, 1.0f), XMFLOAT2(1.0f, 0.0f) },
+        { XMFLOAT3(1.0f, 1.0f, 1.0f), XMFLOAT2(1.0f, 1.0f) },
+        { XMFLOAT3(-1.0f, 1.0f, 1.0f), XMFLOAT2(0.0f, 1.0f) },
+  };
+
+  // Create vertex buffer
+  unsigned int
+    indices[] = {
+        3,1,0,
+        2,1,3,
+
+        6,4,5,
+        7,4,6,
+
+        11,9,8,
+        10,9,11,
+
+        14,12,13,
+        15,12,14,
+
+        19,17,16,
+        18,17,19,
+
+        22,20,21,
+        23,20,22
+  };
+
+  for (SimpleVertex vertex : vertices) {
+    m_meshComponent.m_vertex.push_back(vertex);
+  }
+
+  for (unsigned int index : indices) {
+    m_meshComponent.m_index.push_back(index);
+  }
+
+  m_meshComponent.m_numVertex = m_meshComponent.m_vertex.size();
+  m_meshComponent.m_numIndex = m_meshComponent.m_index.size();
+
+  hr = g_vertexBuffer.init(g_device, m_meshComponent, D3D11_BIND_VERTEX_BUFFER);
+
+  if (FAILED(hr))
+    return hr;
+
+  hr = g_indexBuffer.init(g_device, m_meshComponent, D3D11_BIND_INDEX_BUFFER);
+
+  if (FAILED(hr))
+    return hr;
+
+  // Create the constant buffers
+
+  hr = g_neverChanges.init(g_device, sizeof(CBNeverChanges));
+  if (FAILED(hr))
+    return hr;
+
+  hr = g_changeOnResize.init(g_device, sizeof(CBChangeOnResize));
+  if (FAILED(hr))
+    return hr;
+
+  hr = g_changeEveryFrame.init(g_device, sizeof(CBChangesEveryFrame));
+  if (FAILED(hr))
+    return hr;
+
+  hr = g_textureCubeImg.init(g_device, "seafloor.dds", ExtensionType::DDS);
+  if (FAILED(hr))
+    return hr;
+
+  // Create the sample state
+  hr = g_samplerState.init(g_device);
+
+  if (FAILED(hr))
+    return hr;
+
+  // Initialize the world matrices
+  g_World = XMMatrixIdentity();
+
+  // Initialize the view matrix
+  XMVECTOR Eye = XMVectorSet(0.0f, 3.0f, -6.0f, 0.0f);
+  XMVECTOR At = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+  XMVECTOR Up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+  g_View = XMMatrixLookAtLH(Eye, At, Up);
+
+  return S_OK;
 	return E_NOTIMPL;
 }
 
 void
 BaseApp::update() {
+  // Actualizar tiempo y rotación
+  static float t = 0.0f;
+  if (g_swapchain.m_driverType == D3D_DRIVER_TYPE_REFERENCE) {
+    t += (float)XM_PI * 0.0125f;
+  }
+  else {
+    static DWORD dwTimeStart = 0;
+    DWORD dwTimeCur = GetTickCount();
+    if (dwTimeStart == 0)
+      dwTimeStart = dwTimeCur;
+    t = (dwTimeCur - dwTimeStart) / 1000.0f;
+  }
+
+  // Actualizar la rotación del objeto y el color
+  g_World = XMMatrixRotationY(t);
+  g_vMeshColor = XMFLOAT4(
+    (sinf(t * 1.0f) + 1.0f) * 0.5f,
+    (cosf(t * 3.0f) + 1.0f) * 0.5f,
+    (sinf(t * 5.0f) + 1.0f) * 0.5f,
+    1.0f
+  );
+
+  // Actualizar el buffer constante del frame
+  cb.mWorld = XMMatrixTranspose(g_World);
+  cb.vMeshColor = g_vMeshColor;
+  g_changeEveryFrame.update(g_deviceContext, 0, nullptr, &cb, 0, 0);
+
+
+  // Actualizar la matriz de proyección
+  g_Projection = XMMatrixPerspectiveFovLH(XM_PIDIV4,
+    g_window.m_width / (float)g_window.m_height,
+    0.01f,
+    100.0f);
+
+  // Actualizar la vista (si es necesario cambiar dinámicamente)
+  cbNeverChanges.mView = XMMatrixTranspose(g_View);
+  g_neverChanges.update(g_deviceContext, 0, nullptr, &cbNeverChanges, 0, 0);
+
+
+  // Actualizar la proyección en el buffer constante
+  cbChangesOnResize.mProjection = XMMatrixTranspose(g_Projection);
+  g_changeOnResize.update(g_deviceContext, 0, nullptr, &cbChangesOnResize, 0, 0);
 }
 
 void
 BaseApp::render() {
+  // Limpiar los buffers
+  const float ClearColor[4] = { 0.0f,
+                                0.125f,
+                                0.3f,
+                                1.0f }; // red, green, blue, alpha
+
+  // Set Render Target View
+  g_renderTargetView.render(g_deviceContext,
+    g_depthStencilView,
+    1,
+    ClearColor);
+
+  // Set Viewport
+  //g_deviceContext.RSSetViewports(1, &vp);
+  g_viewport.render(g_deviceContext);
+  // Set Depth Stencil View
+  g_depthStencilView.render(g_deviceContext);
+
+  // Configurar los buffers y shaders para el pipeline
+  //g_deviceContext.IASetInputLayout(g_pVertexLayout);
+  //g_inputLayout.render(g_deviceContext);
+  g_shaderProgram.render(g_deviceContext);
+  g_vertexBuffer.render(g_deviceContext, 0, 1);
+  g_indexBuffer.render(g_deviceContext, 0, 1, false, DXGI_FORMAT_R32_UINT);
+  g_deviceContext.IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+  g_neverChanges.render(g_deviceContext, 0, 1);
+  g_changeOnResize.render(g_deviceContext, 1, 1);
+  g_changeEveryFrame.render(g_deviceContext, 2, 1);
+
+  g_changeEveryFrame.render(g_deviceContext, 2, 1, true);
+
+  g_textureCubeImg.render(g_deviceContext, 0, 1);
+
+  g_samplerState.render(g_deviceContext, 0,1);
+
+  g_deviceContext.DrawIndexed(m_meshComponent.m_index.size(), 0, 0);
+
+  g_swapchain.present();
 }
 
 void
 BaseApp::destroy() {
+
+  if (g_deviceContext.m_deviceContext) g_deviceContext.m_deviceContext->ClearState();
+
+
+  g_textureCubeImg.destroy();
+  g_neverChanges.destroy();
+  g_changeOnResize.destroy();
+  g_changeEveryFrame.destroy();
+  g_vertexBuffer.destroy();
+  g_indexBuffer.destroy();
+  g_shaderProgram.destroy();
+
+
+  g_depthStencil.destroy();
+  g_depthStencilView.destroy();
+  g_renderTargetView.destroy();
+  g_swapchain.destroy();
+  g_deviceContext.destroy();
+  g_device.destroy();
 }
 
 int
@@ -26,7 +312,8 @@ BaseApp::run(HINSTANCE hInstance,
              UNREFERENCED_PARAMETER(hPrevInstance);
              UNREFERENCED_PARAMETER(lpCmdLine);
 
-
+  if (FAILED(g_window.init(hInstance, nCmdShow, wndproc)))
+    return 0;
   if (FAILED(init())) {
     destroy();
     return 0;
@@ -35,7 +322,7 @@ BaseApp::run(HINSTANCE hInstance,
   // Main message loop
   MSG msg = { 0 };
   while (WM_QUIT != msg.message) {
-    if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
+    if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
       TranslateMessage(&msg);
       DispatchMessage(&msg);
     }

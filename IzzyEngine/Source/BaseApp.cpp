@@ -303,6 +303,91 @@ BaseApp::destroy() {
   g_device.destroy();
 }
 
+HRESULT 
+BaseApp::resizeWindow(HWND hWnd, LPARAM lParam){
+  //Si existe el swapchain
+  if (g_swapchain.m_swapchain) {
+    // Destruir el Depth Stencil View, Depth Stencil, Render Target View y Back Buffer
+    g_renderTargetView.destroy();
+    g_depthStencil.destroy();
+    g_depthStencilView.destroy();
+    g_backBuffer.destroy();
+
+    // Redimensionar los datos del ancho y alto de la ventana
+    g_window.m_width = LOWORD(lParam);
+    g_window.m_height = HIWORD(lParam);
+
+    // Redimensionar el buffer del swapchain
+    HRESULT hr = g_swapchain.m_swapchain->ResizeBuffers(0,
+                                                        g_window.m_width,
+                                                        g_window.m_height,
+                                                        DXGI_FORMAT_R8G8B8A8_UNORM,
+                                                        0);
+    // Si falla la redimensión del buffer
+    if (FAILED(hr)) {
+      ERROR("ResizeWindow", "SwapChain", "Failed to resize buffers");
+      return hr;
+    }
+
+    // Recrear el back buffer
+    hr = g_swapchain.m_swapchain->GetBuffer(0,
+                                            __uuidof(ID3D11Texture2D),
+                                            reinterpret_cast<void**>(&g_backBuffer.m_texture));
+    // Si falla la obtención del buffer
+    if (FAILED(hr)) {
+      ERROR("ResizeWindow", "ResizeWindow", "Failed to recreate back buffer");
+      return hr;
+    }
+
+    // Recrear el render target view
+    hr = g_renderTargetView.init(g_device,
+                                 g_backBuffer,
+                                 DXGI_FORMAT_R8G8B8A8_UNORM);
+    // Si falla la creación del render target view
+    if (FAILED(hr)) {
+      ERROR("ResizeWindow", "Render Target View", "Failed to create Render Target View");
+      return hr;
+    }
+
+    // Recrear el depth stencil
+    hr = g_depthStencil.init(g_device,
+                             g_window.m_width,
+                             g_window.m_height,
+                             DXGI_FORMAT_D24_UNORM_S8_UINT,
+                             D3D11_BIND_DEPTH_STENCIL,
+                             4,
+                             0);
+    // Si falla la creación del depth stencil
+    if (FAILED(hr)) {
+      ERROR("ResizeWindow", "Depth Stencil", "Failed to create Depth Stencil");
+      return hr;
+    }
+
+    // Recrear el depth stencil view
+    hr = g_depthStencilView.init(g_device,
+                                 g_depthStencil,
+                                 DXGI_FORMAT_D24_UNORM_S8_UINT);
+    // Si falla la creación del depth stencil view
+    if (FAILED(hr)) {
+      ERROR("ResizeWindow", "Depth Stencil View", "Failed to create new Depth Stencil View");
+      return hr;
+    }
+
+    // Actualizar el viewport
+    g_viewport.init(g_window);
+
+    // Actualizar la proyección
+    g_Projection = XMMatrixPerspectiveFovLH(XM_PIDIV4, 
+                                            g_window.m_width / (float)g_window.m_height, 
+                                            0.01f, 
+                                            100.0f);
+    cbChangesOnResize.mProjection = XMMatrixTranspose(g_Projection);
+    g_changeOnResize.update(g_deviceContext, 0, nullptr, &cbChangesOnResize, 0, 0);
+  }
+}
+
+
+
 int
 BaseApp::run(HINSTANCE hInstance,
 						 HINSTANCE hPrevInstance,

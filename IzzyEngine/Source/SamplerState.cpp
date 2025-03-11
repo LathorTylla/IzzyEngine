@@ -29,7 +29,7 @@
  
  void 
  SamplerState::update() {
-   // No hay lógica de actualización para un sampler en este caso.
+  
  }
  
  void 

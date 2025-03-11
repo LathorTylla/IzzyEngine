@@ -51,6 +51,8 @@ public:
 	void
 	destroy();
 
+  HRESULT resizeWindow(HWND hWnd, LPARAM lParam);
+
  /*
   * @brief Método principal de ejecución de la aplicación.
   *

@@ -20,11 +20,38 @@ WndProc(HWND hWnd,
 		EndPaint(hWnd, &ps);
 		break;
 
-	//case WM_SIZE:
+	case WM_SIZE:
+    app.resizeWindow(hWnd, lParam);
+    break;
 
-		case WM_DESTROY:
+	case WM_DESTROY:
 			PostQuitMessage(0);
 			break;
+
+   //Agregar los siguientes casos para manejar los inputs de teclado
+	case WM_KEYDOWN:
+    app.keys[wParam] = true;
+    break;
+
+  case WM_KEYUP:
+    app.keys[wParam] = false;
+    break;
+
+	case WM_RBUTTONDOWN:
+		app.mouseLeftDown = true;
+		break;
+
+	case WM_RBUTTONUP:
+		app.mouseLeftDown = false;
+		break;
+
+	case WM_MOUSEMOVE:
+		if (app.mouseLeftDown) {
+			int x = LOWORD(lParam);
+			int y = HIWORD(lParam);
+			app.rotateCamera(x, y);
+		}
+		break;
 
 		default:
 			return DefWindowProc(hWnd, 

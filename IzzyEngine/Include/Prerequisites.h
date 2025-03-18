@@ -118,3 +118,29 @@ ShaderType {
   VERTEX_SHADER = 0,
   PIXEL_SHADER = 1
 };
+
+/*
+ * @brief Estructura para definir la cámara en el espacio 3D.
+ */
+struct 
+Camera {
+  XMFLOAT3 pos;      /* Posición de la cámara en el espacio 3D. */
+  XMFLOAT3 target;   /* Punto al que la cámara apunta. */
+
+  XMFLOAT3 up;       /* Vector de dirección hacia arriba. */
+  XMFLOAT3 forward;  /* Vector de dirección hacia adelante. */
+  XMFLOAT3 right;    /* Vector de dirección hacia la derecha. */
+
+  float yaw;         /* Ángulo de rotación horizontal. */
+  float pitch;       /* Ángulo de rotación vertical. */
+
+  Camera() {
+    pos = XMFLOAT3(0.0f, 0.0f, -6.0f);    // Posición inicial de la cámara
+    target = XMFLOAT3(0.0f, 2.0f, 0.0f);  // Punto al que la cámara apunta
+    up = XMFLOAT3(0.0f, 1.0f, 0.0f);      // Vector de dirección hacia arriba
+    forward = XMFLOAT3(0.0f, 0.0f, 1.0f); // Vector de dirección hacia adelante
+    right = XMFLOAT3(1.0f, 0.0f, 0.0f);   // Vector de dirección hacia la derecha
+    yaw = 0.0f;                           // Ángulo de rotación horizontal
+    pitch = 0.0f;                         // Ángulo de rotación vertical
+  }
+};

@@ -210,7 +210,8 @@ BaseApp::update() {
     t = (dwTimeCur - dwTimeStart) / 1000.0f;
   }
 
-  //rotation.y = t;
+  InputActionMap(t);
+  rotation.y = t;
   //Esto seria como nuestro transform
   // Actualizar la rotación del objeto y el color
   XMMATRIX scaleMatrix = XMMatrixScaling(scale.x, scale.y, scale.z);
@@ -220,11 +221,10 @@ BaseApp::update() {
   // Actualizar la matriz del modelo por escala, rotación y traslación
   g_modelMatrix = scaleMatrix * rotationMatrix * translationMatrix;
   g_vMeshColor = XMFLOAT4(
-    (sinf(t * 1.0f) + 1.0f) * 0.5f,
-    (cosf(t * 3.0f) + 1.0f) * 0.5f,
-    (sinf(t * 5.0f) + 1.0f) * 0.5f,
-    1.0f
-  );
+                         (sinf(t * 1.0f) + 1.0f) * 0.5f,
+                         (cosf(t * 3.0f) + 1.0f) * 0.5f,
+                         (sinf(t * 5.0f) + 1.0f) * 0.5f,
+                         1.0f);
 
   // componer la matriz en orden de escala, rotacion y traslación
   // Actualizar el buffer constante del frame
@@ -232,18 +232,9 @@ BaseApp::update() {
   cb.vMeshColor = g_vMeshColor;
   g_changeEveryFrame.update(g_deviceContext, 0, nullptr, &cb, 0, 0);
 
-
-  // Actualizar la matriz de proyección
-  g_Projection = XMMatrixPerspectiveFovLH(XM_PIDIV4,
-    g_window.m_width / (float)g_window.m_height,
-    0.01f,
-    100.0f);
-
-  // Actualizar la vista (si es necesario cambiar dinámicamente)
-  cbNeverChanges.mView = XMMatrixTranspose(g_View);
-  g_neverChanges.update(g_deviceContext, 0, nullptr, &cbNeverChanges, 0, 0);
-
-
+  float FOV = XMConvertToRadians(90.0f);
+  g_Projection = XMMatrixPerspectiveFovLH(FOV, g_window.m_width / (float)g_window.m_height, 0.01f, 100.0f);
+  updateCamera();
   // Actualizar la proyección en el buffer constante
   cbChangesOnResize.mProjection = XMMatrixTranspose(g_Projection);
   g_changeOnResize.update(g_deviceContext, 0, nullptr, &cbChangesOnResize, 0, 0);
@@ -314,6 +305,90 @@ BaseApp::destroy() {
   g_deviceContext.destroy();
   g_device.destroy();
 }
+
+void 
+BaseApp::InputActionMap(float deltaTime) {
+
+  float sensibility = 0.0001f;
+  float moveSpeedCamera = 0.0001f;
+
+  //movmiento del cubo por teclas W A S D
+
+  if (keys['W']) {
+    position.y += sensibility * deltaTime;
+  }
+  if (keys['S']) {
+    position.y -= sensibility * deltaTime;
+  }
+  if (keys['A']) {
+    position.x -= sensibility * deltaTime;
+  }
+  if (keys['D']) {
+    position.x += sensibility * deltaTime;
+  }
+  if (keys['E']) {
+    position.z += sensibility * deltaTime;
+  }
+  if (keys['Q']) {
+    position.z -= sensibility * deltaTime;
+  }
+
+  XMVECTOR position = XMLoadFloat3(&m_camera.pos);
+  XMVECTOR forward = XMLoadFloat3(&m_camera.forward);
+  XMVECTOR right = XMLoadFloat3(&m_camera.right);
+
+  //movimiento de la camara por teclas flechas
+
+  /*if (keys['W']) pos += forward * moveSpeedCamera;
+  if (keys['S']) pos -= forward * moveSpeedCamera;
+  if (keys['A']) pos -= right * moveSpeedCamera;
+  if (keys['D']) pos += right * moveSpeedCamera;*/
+
+  XMStoreFloat3(&m_camera.pos, position);
+
+}
+
+void 
+BaseApp::updateCamera() {
+  XMVECTOR position = XMLoadFloat3(&m_camera.pos);
+  XMVECTOR dir = XMLoadFloat3(&m_camera.forward);
+  XMVECTOR up = XMLoadFloat3(&m_camera.up);
+
+  g_View = XMMatrixLookAtLH(position,position+ dir, up);
+
+  cbNeverChanges.mView = XMMatrixTranspose(g_View);
+  g_neverChanges.update(g_deviceContext, 0, nullptr, &cbNeverChanges, 0, 0);
+}
+
+void
+BaseApp::rotateCamera(int mouseX, int mouseY) {
+  float offsetX = (mouseX - lastX) * sensitivity;
+  float offsetY = (mouseY - lastY) * sensitivity;
+  lastX = mouseX;
+  lastY = mouseY;
+
+  m_camera.yaw += offsetX;
+  m_camera.pitch += offsetY;
+
+  // Limitar la inclinación de la cámara
+  if (m_camera.pitch > 1.5f) m_camera.pitch = 1.5f;
+  if (m_camera.pitch < -1.5f) m_camera.pitch = -1.5f;
+
+  // Recalcular la dirección hacia adelante
+  XMVECTOR forward = XMVectorSet(
+    cosf(m_camera.yaw) * cosf(m_camera.pitch),
+    sinf(m_camera.pitch),
+    sinf(m_camera.yaw) * cosf(m_camera.pitch),
+    0.0f
+  );
+
+  XMVECTOR right = XMVector3Cross(forward, XMLoadFloat3(&m_camera.up));
+
+  XMStoreFloat3(&m_camera.forward, XMVector3Normalize(forward));
+  XMStoreFloat3(&m_camera.right, XMVector3Normalize(right));
+}
+  
+ 
 
 HRESULT 
 BaseApp::resizeWindow(HWND hWnd, LPARAM lParam){

@@ -51,8 +51,17 @@ public:
 	void
 	destroy();
 
-  HRESULT resizeWindow(HWND hWnd, LPARAM lParam);
+  void
+  InputActionMap(float deltaTime);
 
+  HRESULT 
+  resizeWindow(HWND hWnd, LPARAM lParam);
+
+  void
+  updateCamera();
+
+  void
+  rotateCamera(int mouseX, int mouseY);
  /*
   * @brief Método principal de ejecución de la aplicación.
   *
@@ -85,7 +94,6 @@ public:
   DepthStencilView										g_depthStencilView;
   Viewport														g_viewport;
   ShaderProgram												g_shaderProgram;
-
   Buffer															g_vertexBuffer;
   Buffer															g_indexBuffer;
   Buffer 															g_neverChanges;
@@ -93,8 +101,6 @@ public:
   Buffer 															g_changeEveryFrame;
   Texture 														g_textureCubeImg;
   SamplerState 												g_samplerState;
-  //ID3D11ShaderResourceView*           g_pTextureRV = nullptr;
-  //ID3D11SamplerState*                 g_pSamplerLinear = nullptr;
   XMMATRIX                            g_modelMatrix;
   XMMATRIX                            g_View;
   XMMATRIX                            g_Projection;
@@ -109,4 +115,12 @@ public:
   CBChangeOnResize cbChangesOnResize;
 
   MeshComponent m_meshComponent;
+  Camera m_camera;
+
+  bool keys[256] = { false }; // Arreglo de teclas para manejar los inputs de teclado
+  bool mouseLeftDown = false; // Variable para manejar el clic izquierdo del mouse
+  int lastX;                  // Variable para almacenar la última posición en X del mouse
+  int lastY;                  // Variable para almacenar la última posición en Y del mouse
+  float sensitivity = 0.002f; // Sensibilidad del movimiento del mouse
+
 };

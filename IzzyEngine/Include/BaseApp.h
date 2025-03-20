@@ -12,6 +12,7 @@
 #include "Buffer.h"
 #include "MeshComponent.h"
 #include "SamplerState.h"
+#include "userInterface.h"
 
 /*
  * @brief BaseApp.
@@ -84,27 +85,27 @@ public:
 
 public:
   // Global Variables
-  Window															g_window;
-  Device															g_device;
-  DeviceContext												g_deviceContext;
-  SwapChain														g_swapchain;
-  Texture															g_backBuffer;
-  Texture															g_depthStencil;
-  RenderTargetView										g_renderTargetView;
-  DepthStencilView										g_depthStencilView;
-  Viewport														g_viewport;
-  ShaderProgram												g_shaderProgram;
-  Buffer															g_vertexBuffer;
-  Buffer															g_indexBuffer;
-  Buffer 															g_neverChanges;
-  Buffer 															g_changeOnResize;
-  Buffer 															g_changeEveryFrame;
-  Texture 														g_textureCubeImg;
-  SamplerState 												g_samplerState;
-  XMMATRIX                            g_modelMatrix;
-  XMMATRIX                            g_View;
-  XMMATRIX                            g_Projection;
-  XMFLOAT4                            g_vMeshColor;
+  Window															m_window;
+  Device															m_device;
+  DeviceContext												m_deviceContext;
+  SwapChain														m_swapchain;
+  Texture															m_backBuffer;
+  Texture															m_depthStencil;
+  RenderTargetView										m_renderTargetView;
+  DepthStencilView										m_depthStencilView;
+  Viewport														m_viewport;
+  ShaderProgram												m_shaderProgram;
+  Buffer															m_vertexBuffer;
+  Buffer															m_indexBuffer;
+  Buffer 															m_neverChanges;
+  Buffer 															m_changeOnResize;
+  Buffer 															m_changeEveryFrame;
+  Texture 														m_textureCubeImg;
+  SamplerState 												m_samplerState;
+  XMMATRIX                            m_modelMatrix;
+  XMMATRIX                            m_View;
+  XMMATRIX                            m_Projection;
+  XMFLOAT4                            m_vMeshColor;
 
   XMFLOAT3                            position;
   XMFLOAT3                            rotation;
@@ -116,6 +117,9 @@ public:
 
   MeshComponent m_meshComponent;
   Camera m_camera;
+
+  UserInterface                       m_userInterface;
+
 
   bool keys[256] = { false }; // Arreglo de teclas para manejar los inputs de teclado
   bool mouseLeftDown = false; // Variable para manejar el clic izquierdo del mouse

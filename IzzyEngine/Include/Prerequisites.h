@@ -26,6 +26,13 @@
  * @brief Macros utilizadas para depuración y gestión de recursos en DirectX 11.
  */
 
+//ImGUI
+
+#include "imgui.h"
+#include "imgui_impl_win32.h"
+#include "imgui_impl_dx11.h"
+#include <imgui_internal.h>
+
 /*
  * @brief Libera un recurso de DirectX y lo establece en nullptr para evitar accesos inválidos.
  *

@@ -3,6 +3,8 @@
 
 BaseApp app;
 
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 //--------------------------------------------------------------------------------------
 // Called every time the application receives a message
 //--------------------------------------------------------------------------------------
@@ -13,6 +15,9 @@ WndProc(HWND hWnd,
 				LPARAM lParam) {
 	PAINTSTRUCT ps;
 	HDC hdc;
+
+	if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
+		return true;
 
 	switch (message) {
 	case WM_PAINT:

@@ -5,17 +5,17 @@ BaseApp::init() {
   HRESULT hr = S_OK;
 
   // Create Swapchain and BackBuffer
-  hr = g_swapchain.init(g_device, 
-                        g_deviceContext, 
-                        g_backBuffer, 
-                        g_window);
+  hr = m_swapchain.init(m_device, 
+                        m_deviceContext, 
+                        m_backBuffer, 
+                        m_window);
   if (FAILED(hr)) {
     return hr;
   }
 
   // Create a render target view
-  hr = g_renderTargetView.init(g_device,
-                               g_backBuffer,
+  hr = m_renderTargetView.init(m_device,
+                               m_backBuffer,
                                DXGI_FORMAT_R8G8B8A8_UNORM);
 
   if (FAILED(hr)) {
@@ -23,9 +23,9 @@ BaseApp::init() {
   }
 
   // Create a depth stencil
-  hr = g_depthStencil.init(g_device,
-                           g_window.m_width,
-                           g_window.m_height,
+  hr = m_depthStencil.init(m_device,
+                           m_window.m_width,
+                           m_window.m_height,
                            DXGI_FORMAT_D24_UNORM_S8_UINT,
                            D3D11_BIND_DEPTH_STENCIL,
                            4,
@@ -34,8 +34,8 @@ BaseApp::init() {
     return hr;
 
   // Create the depth stencil view
-  hr = g_depthStencilView.init(g_device,
-                               g_depthStencil,
+  hr = m_depthStencilView.init(m_device,
+                               m_depthStencil,
                                DXGI_FORMAT_D24_UNORM_S8_UINT);
 
   if (FAILED(hr))
@@ -43,7 +43,7 @@ BaseApp::init() {
 
 
   // Setup the viewport
-  hr = g_viewport.init(g_window);
+  hr = m_viewport.init(m_window);
 
   if (FAILED(hr))
     return hr;
@@ -72,7 +72,7 @@ BaseApp::init() {
   Layout.push_back(texcoord);
 
   // Create the Shader Program
-  hr = g_shaderProgram.init(g_device, "IzzyEngine.fx", Layout);
+  hr = m_shaderProgram.init(m_device, "IzzyEngine.fx", Layout);
 
   if (FAILED(hr))
     return hr;
@@ -144,36 +144,36 @@ BaseApp::init() {
   m_meshComponent.m_numVertex = m_meshComponent.m_vertex.size();
   m_meshComponent.m_numIndex = m_meshComponent.m_index.size();
 
-  hr = g_vertexBuffer.init(g_device, m_meshComponent, D3D11_BIND_VERTEX_BUFFER);
+  hr = m_vertexBuffer.init(m_device, m_meshComponent, D3D11_BIND_VERTEX_BUFFER);
 
   if (FAILED(hr))
     return hr;
 
-  hr = g_indexBuffer.init(g_device, m_meshComponent, D3D11_BIND_INDEX_BUFFER);
+  hr = m_indexBuffer.init(m_device, m_meshComponent, D3D11_BIND_INDEX_BUFFER);
 
   if (FAILED(hr))
     return hr;
 
   // Create the constant buffers
 
-  hr = g_neverChanges.init(g_device, sizeof(CBNeverChanges));
+  hr = m_neverChanges.init(m_device, sizeof(CBNeverChanges));
   if (FAILED(hr))
     return hr;
 
-  hr = g_changeOnResize.init(g_device, sizeof(CBChangeOnResize));
+  hr = m_changeOnResize.init(m_device, sizeof(CBChangeOnResize));
   if (FAILED(hr))
     return hr;
 
-  hr = g_changeEveryFrame.init(g_device, sizeof(CBChangesEveryFrame));
+  hr = m_changeEveryFrame.init(m_device, sizeof(CBChangesEveryFrame));
   if (FAILED(hr))
     return hr;
 
-  hr = g_textureCubeImg.init(g_device, "seafloor.dds", ExtensionType::DDS);
+  hr = m_textureCubeImg.init(m_device, "seafloor.dds", ExtensionType::DDS);
   if (FAILED(hr))
     return hr;
 
   // Create the sample state
-  hr = g_samplerState.init(g_device);
+  hr = m_samplerState.init(m_device);
 
   if (FAILED(hr))
     return hr;
@@ -183,13 +183,15 @@ BaseApp::init() {
   scale.y = 1;
   scale.z = 1;
   // Initialize the world matrices
-  g_modelMatrix = XMMatrixIdentity();
+  m_modelMatrix = XMMatrixIdentity();
 
   // Initialize the view matrix
   XMVECTOR Eye = XMVectorSet(0.0f, 3.0f, -6.0f, 0.0f);
   XMVECTOR At = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
   XMVECTOR Up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-  g_View = XMMatrixLookAtLH(Eye, At, Up);
+  m_View = XMMatrixLookAtLH(Eye, At, Up);
+
+  m_userInterface.init(m_window.m_hWnd, m_device.m_device, m_deviceContext.m_deviceContext);
 
   return S_OK;
 	return E_NOTIMPL;
@@ -197,9 +199,21 @@ BaseApp::init() {
 
 void
 BaseApp::update() {
+
+  m_userInterface.update();
+
+  ImGui::Begin("Transform", nullptr, ImGuiWindowFlags_NoCollapse);
+
+  m_userInterface.vec3Control("Position", &position.x, 0.0f);
+
+  ImGui::End();
+
+  ImGui::Begin("Test Docking", nullptr, ImGuiWindowFlags_NoCollapse);
+  ImGui::Text("Wenas profe");
+  ImGui::End();
   // Actualizar tiempo y rotación
   static float t = 0.0f;
-  if (g_swapchain.m_driverType == D3D_DRIVER_TYPE_REFERENCE) {
+  if (m_swapchain.m_driverType == D3D_DRIVER_TYPE_REFERENCE) {
     t += (float)XM_PI * 0.0125f;
   }
   else {
@@ -219,8 +233,8 @@ BaseApp::update() {
   XMMATRIX translationMatrix = XMMatrixTranslation(position.x, position.y, position.z);
 
   // Actualizar la matriz del modelo por escala, rotación y traslación
-  g_modelMatrix = scaleMatrix * rotationMatrix * translationMatrix;
-  g_vMeshColor = XMFLOAT4(
+  m_modelMatrix = scaleMatrix * rotationMatrix * translationMatrix;
+  m_vMeshColor = XMFLOAT4(
                          (sinf(t * 1.0f) + 1.0f) * 0.5f,
                          (cosf(t * 3.0f) + 1.0f) * 0.5f,
                          (sinf(t * 5.0f) + 1.0f) * 0.5f,
@@ -228,16 +242,17 @@ BaseApp::update() {
 
   // componer la matriz en orden de escala, rotacion y traslación
   // Actualizar el buffer constante del frame
-  cb.mWorld = XMMatrixTranspose(g_modelMatrix);
-  cb.vMeshColor = g_vMeshColor;
-  g_changeEveryFrame.update(g_deviceContext, 0, nullptr, &cb, 0, 0);
+  cb.mWorld = XMMatrixTranspose(m_modelMatrix);
+  cb.vMeshColor = m_vMeshColor;
+  m_changeEveryFrame.update(m_deviceContext, 0, nullptr, &cb, 0, 0);
 
   float FOV = XMConvertToRadians(90.0f);
-  g_Projection = XMMatrixPerspectiveFovLH(FOV, g_window.m_width / (float)g_window.m_height, 0.01f, 100.0f);
+  m_Projection = XMMatrixPerspectiveFovLH(FOV, m_window.m_width / (float)m_window.m_height, 0.01f, 100.0f);
   updateCamera();
+
   // Actualizar la proyección en el buffer constante
-  cbChangesOnResize.mProjection = XMMatrixTranspose(g_Projection);
-  g_changeOnResize.update(g_deviceContext, 0, nullptr, &cbChangesOnResize, 0, 0);
+  cbChangesOnResize.mProjection = XMMatrixTranspose(m_Projection);
+  m_changeOnResize.update(m_deviceContext, 0, nullptr, &cbChangesOnResize, 0, 0);
 }
 
 void
@@ -249,61 +264,65 @@ BaseApp::render() {
                                 1.0f }; // red, green, blue, alpha
 
   // Set Render Target View
-  g_renderTargetView.render(g_deviceContext,
-    g_depthStencilView,
+  m_renderTargetView.render(m_deviceContext,
+    m_depthStencilView,
     1,
     ClearColor);
 
   // Set Viewport
   //g_deviceContext.RSSetViewports(1, &vp);
-  g_viewport.render(g_deviceContext);
+  m_viewport.render(m_deviceContext);
   // Set Depth Stencil View
-  g_depthStencilView.render(g_deviceContext);
+  m_depthStencilView.render(m_deviceContext);
 
   // Configurar los buffers y shaders para el pipeline
   //g_deviceContext.IASetInputLayout(g_pVertexLayout);
   //g_inputLayout.render(g_deviceContext);
-  g_shaderProgram.render(g_deviceContext);
-  g_vertexBuffer.render(g_deviceContext, 0, 1);
-  g_indexBuffer.render(g_deviceContext, 0, 1, false, DXGI_FORMAT_R32_UINT);
-  g_deviceContext.IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+  m_shaderProgram.render(m_deviceContext);
+  m_vertexBuffer.render(m_deviceContext, 0, 1);
+  m_indexBuffer.render(m_deviceContext, 0, 1, false, DXGI_FORMAT_R32_UINT);
+  m_deviceContext.IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-  g_neverChanges.render(g_deviceContext, 0, 1);
-  g_changeOnResize.render(g_deviceContext, 1, 1);
-  g_changeEveryFrame.render(g_deviceContext, 2, 1);
+  m_neverChanges.render(m_deviceContext, 0, 1);
+  m_changeOnResize.render(m_deviceContext, 1, 1);
+  m_changeEveryFrame.render(m_deviceContext, 2, 1);
 
-  g_changeEveryFrame.render(g_deviceContext, 2, 1, true);
+  m_changeEveryFrame.render(m_deviceContext, 2, 1, true);
 
-  g_textureCubeImg.render(g_deviceContext, 0, 1);
+  m_textureCubeImg.render(m_deviceContext, 0, 1);
 
-  g_samplerState.render(g_deviceContext, 0,1);
+  m_samplerState.render(m_deviceContext, 0,1);
 
-  g_deviceContext.DrawIndexed(m_meshComponent.m_index.size(), 0, 0);
+  m_deviceContext.DrawIndexed(m_meshComponent.m_index.size(), 0, 0);
 
-  g_swapchain.present();
+  m_userInterface.render();
+
+  m_swapchain.present();
 }
 
 void
 BaseApp::destroy() {
 
-  if (g_deviceContext.m_deviceContext) g_deviceContext.m_deviceContext->ClearState();
+  if (m_deviceContext.m_deviceContext) m_deviceContext.m_deviceContext->ClearState();
 
 
-  g_textureCubeImg.destroy();
-  g_neverChanges.destroy();
-  g_changeOnResize.destroy();
-  g_changeEveryFrame.destroy();
-  g_vertexBuffer.destroy();
-  g_indexBuffer.destroy();
-  g_shaderProgram.destroy();
+  m_textureCubeImg.destroy();
+  m_neverChanges.destroy();
+  m_changeOnResize.destroy();
+  m_changeEveryFrame.destroy();
+  m_vertexBuffer.destroy();
+  m_indexBuffer.destroy();
+  m_shaderProgram.destroy();
 
 
-  g_depthStencil.destroy();
-  g_depthStencilView.destroy();
-  g_renderTargetView.destroy();
-  g_swapchain.destroy();
-  g_deviceContext.destroy();
-  g_device.destroy();
+  m_depthStencil.destroy();
+  m_depthStencilView.destroy();
+  m_renderTargetView.destroy();
+  m_swapchain.destroy();
+  m_deviceContext.destroy();
+  m_device.destroy();
+
+  m_userInterface.destroy();
 }
 
 void 
@@ -354,10 +373,10 @@ BaseApp::updateCamera() {
   XMVECTOR dir = XMLoadFloat3(&m_camera.forward);
   XMVECTOR up = XMLoadFloat3(&m_camera.up);
 
-  g_View = XMMatrixLookAtLH(position,position+ dir, up);
+  m_View = XMMatrixLookAtLH(position,position+ dir, up);
 
-  cbNeverChanges.mView = XMMatrixTranspose(g_View);
-  g_neverChanges.update(g_deviceContext, 0, nullptr, &cbNeverChanges, 0, 0);
+  cbNeverChanges.mView = XMMatrixTranspose(m_View);
+  m_neverChanges.update(m_deviceContext, 0, nullptr, &cbNeverChanges, 0, 0);
 }
 
 void
@@ -393,21 +412,21 @@ BaseApp::rotateCamera(int mouseX, int mouseY) {
 HRESULT 
 BaseApp::resizeWindow(HWND hWnd, LPARAM lParam){
   //Si existe el swapchain
-  if (g_swapchain.m_swapchain) {
+  if (m_swapchain.m_swapchain) {
     // Destruir el Depth Stencil View, Depth Stencil, Render Target View y Back Buffer
-    g_renderTargetView.destroy();
-    g_depthStencil.destroy();
-    g_depthStencilView.destroy();
-    g_backBuffer.destroy();
+    m_renderTargetView.destroy();
+    m_depthStencil.destroy();
+    m_depthStencilView.destroy();
+    m_backBuffer.destroy();
 
     // Redimensionar los datos del ancho y alto de la ventana
-    g_window.m_width = LOWORD(lParam);
-    g_window.m_height = HIWORD(lParam);
+    m_window.m_width = LOWORD(lParam);
+    m_window.m_height = HIWORD(lParam);
 
     // Redimensionar el buffer del swapchain
-    HRESULT hr = g_swapchain.m_swapchain->ResizeBuffers(0,
-                                                        g_window.m_width,
-                                                        g_window.m_height,
+    HRESULT hr = m_swapchain.m_swapchain->ResizeBuffers(0,
+                                                        m_window.m_width,
+                                                        m_window.m_height,
                                                         DXGI_FORMAT_R8G8B8A8_UNORM,
                                                         0);
     // Si falla la redimensión del buffer
@@ -417,9 +436,9 @@ BaseApp::resizeWindow(HWND hWnd, LPARAM lParam){
     }
 
     // Recrear el back buffer
-    hr = g_swapchain.m_swapchain->GetBuffer(0,
+    hr = m_swapchain.m_swapchain->GetBuffer(0,
                                             __uuidof(ID3D11Texture2D),
-                                            reinterpret_cast<void**>(&g_backBuffer.m_texture));
+                                            reinterpret_cast<void**>(&m_backBuffer.m_texture));
     // Si falla la obtención del buffer
     if (FAILED(hr)) {
       ERROR("ResizeWindow", "ResizeWindow", "Failed to recreate back buffer");
@@ -427,8 +446,8 @@ BaseApp::resizeWindow(HWND hWnd, LPARAM lParam){
     }
 
     // Recrear el render target view
-    hr = g_renderTargetView.init(g_device,
-                                 g_backBuffer,
+    hr = m_renderTargetView.init(m_device,
+                                 m_backBuffer,
                                  DXGI_FORMAT_R8G8B8A8_UNORM);
     // Si falla la creación del render target view
     if (FAILED(hr)) {
@@ -437,9 +456,9 @@ BaseApp::resizeWindow(HWND hWnd, LPARAM lParam){
     }
 
     // Recrear el depth stencil
-    hr = g_depthStencil.init(g_device,
-                             g_window.m_width,
-                             g_window.m_height,
+    hr = m_depthStencil.init(m_device,
+                             m_window.m_width,
+                             m_window.m_height,
                              DXGI_FORMAT_D24_UNORM_S8_UINT,
                              D3D11_BIND_DEPTH_STENCIL,
                              4,
@@ -451,8 +470,8 @@ BaseApp::resizeWindow(HWND hWnd, LPARAM lParam){
     }
 
     // Recrear el depth stencil view
-    hr = g_depthStencilView.init(g_device,
-                                 g_depthStencil,
+    hr = m_depthStencilView.init(m_device,
+                                 m_depthStencil,
                                  DXGI_FORMAT_D24_UNORM_S8_UINT);
     // Si falla la creación del depth stencil view
     if (FAILED(hr)) {
@@ -461,15 +480,15 @@ BaseApp::resizeWindow(HWND hWnd, LPARAM lParam){
     }
 
     // Actualizar el viewport
-    g_viewport.init(g_window);
+    m_viewport.init(m_window);
 
     // Actualizar la proyección
-    g_Projection = XMMatrixPerspectiveFovLH(XM_PIDIV4, 
-                                            g_window.m_width / (float)g_window.m_height, 
+    m_Projection = XMMatrixPerspectiveFovLH(XM_PIDIV4, 
+                                            m_window.m_width / (float)m_window.m_height, 
                                             0.01f, 
                                             100.0f);
-    cbChangesOnResize.mProjection = XMMatrixTranspose(g_Projection);
-    g_changeOnResize.update(g_deviceContext, 0, nullptr, &cbChangesOnResize, 0, 0);
+    cbChangesOnResize.mProjection = XMMatrixTranspose(m_Projection);
+    m_changeOnResize.update(m_deviceContext, 0, nullptr, &cbChangesOnResize, 0, 0);
   }
 }
 
@@ -484,7 +503,7 @@ BaseApp::run(HINSTANCE hInstance,
              UNREFERENCED_PARAMETER(hPrevInstance);
              UNREFERENCED_PARAMETER(lpCmdLine);
 
-  if (FAILED(g_window.init(hInstance, nCmdShow, wndproc)))
+  if (FAILED(m_window.init(hInstance, nCmdShow, wndproc)))
     return 0;
   if (FAILED(init())) {
     destroy();

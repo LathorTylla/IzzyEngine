@@ -161,7 +161,7 @@
       <FloatingPointModel>Fast</FloatingPointModel>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./include/;DXUT\Core;DXUT\Optional;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include/;DXUT\Core;DXUT\Optional;D:\Github\IzzyEngine\IzzyEngine\imgui-docking\imgui-docking\backends;D:\Github\IzzyEngine\IzzyEngine\imgui-docking\imgui-docking;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions> %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>WIN32;_DEBUG;DEBUG;PROFILE;_WINDOWS;D3DXFX_LARGEADDRESS_HANDLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
@@ -206,7 +206,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FloatingPointModel>Fast</FloatingPointModel>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./include/;DXUT\Core;DXUT\Optional;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include/;DXUT\Core;DXUT\Optional;D:\Github\IzzyEngine\IzzyEngine\imgui-docking\imgui-docking\backends;D:\Github\IzzyEngine\IzzyEngine\imgui-docking\imgui-docking;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions> %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>WIN32;_DEBUG;DEBUG;PROFILE;_WINDOWS;D3DXFX_LARGEADDRESS_HANDLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -252,7 +252,7 @@
       <FloatingPointModel>Fast</FloatingPointModel>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./include/;DXUT\Core;DXUT\Optional;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include/;DXUT\Core;DXUT\Optional;D:\Github\IzzyEngine\IzzyEngine\imgui-docking\imgui-docking\backends;D:\Github\IzzyEngine\IzzyEngine\imgui-docking\imgui-docking;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions> %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;D3DXFX_LARGEADDRESS_HANDLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -298,7 +298,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FloatingPointModel>Fast</FloatingPointModel>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./include/;DXUT\Core;DXUT\Optional;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include/;DXUT\Core;DXUT\Optional;D:\Github\IzzyEngine\IzzyEngine\imgui-docking\imgui-docking\backends;D:\Github\IzzyEngine\IzzyEngine\imgui-docking\imgui-docking;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions> %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;D3DXFX_LARGEADDRESS_HANDLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -345,7 +345,7 @@
       <FloatingPointModel>Fast</FloatingPointModel>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./include/;DXUT\Core;DXUT\Optional;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include/;DXUT\Core;DXUT\Optional;D:\Github\IzzyEngine\IzzyEngine\imgui-docking\imgui-docking\backends;D:\Github\IzzyEngine\IzzyEngine\imgui-docking\imgui-docking;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions> %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>WIN32;NDEBUG;PROFILE;_WINDOWS;D3DXFX_LARGEADDRESS_HANDLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -391,7 +391,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FloatingPointModel>Fast</FloatingPointModel>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./include/;DXUT\Core;DXUT\Optional;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include/;DXUT\Core;DXUT\Optional;D:\Github\IzzyEngine\IzzyEngine\imgui-docking\imgui-docking\backends;D:\Github\IzzyEngine\IzzyEngine\imgui-docking\imgui-docking;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions> %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>WIN32;NDEBUG;PROFILE;_WINDOWS;D3DXFX_LARGEADDRESS_HANDLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -429,6 +429,14 @@
   </ItemDefinitionGroup>
   <ItemGroup />
   <ItemGroup>
+    <ClCompile Include="imgui-docking\imgui-docking\backends\imgui_impl_dx11.cpp" />
+    <ClCompile Include="imgui-docking\imgui-docking\backends\imgui_impl_win32.cpp" />
+    <ClCompile Include="imgui-docking\imgui-docking\imgui.cpp" />
+    <ClCompile Include="imgui-docking\imgui-docking\imgui_demo.cpp" />
+    <ClCompile Include="imgui-docking\imgui-docking\imgui_draw.cpp" />
+    <ClCompile Include="imgui-docking\imgui-docking\imgui_tables.cpp" />
+    <ClCompile Include="imgui-docking\imgui-docking\imgui_widgets.cpp" />
+    <ClCompile Include="Include\UserInterface.cpp" />
     <ClCompile Include="IzzyEngine.cpp" />
     <ClCompile Include="Source\BaseApp.cpp" />
     <ClCompile Include="Source\Buffer.cpp" />
@@ -448,6 +456,14 @@
     <None Include="IzzyEngine.fx" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="imgui-docking\imgui-docking\backends\imgui_impl_dx11.h" />
+    <ClInclude Include="imgui-docking\imgui-docking\backends\imgui_impl_win32.h" />
+    <ClInclude Include="imgui-docking\imgui-docking\imconfig.h" />
+    <ClInclude Include="imgui-docking\imgui-docking\imgui.h" />
+    <ClInclude Include="imgui-docking\imgui-docking\imgui_internal.h" />
+    <ClInclude Include="imgui-docking\imgui-docking\imstb_rectpack.h" />
+    <ClInclude Include="imgui-docking\imgui-docking\imstb_textedit.h" />
+    <ClInclude Include="imgui-docking\imgui-docking\imstb_truetype.h" />
     <ClInclude Include="Include\BaseApp.h" />
     <ClInclude Include="Include\Buffer.h" />
     <ClInclude Include="Include\DepthStencilView.h" />
@@ -463,6 +479,7 @@
     <ClInclude Include="Include\stb_image.h" />
     <ClInclude Include="Include\Swapchain.h" />
     <ClInclude Include="Include\Texture.h" />
+    <ClInclude Include="Include\UserInterface.h" />
     <ClInclude Include="Include\Viewport.h" />
     <ClInclude Include="Include\Window.h" />
     <ResourceCompile Include="IzzyEngine.rc" />

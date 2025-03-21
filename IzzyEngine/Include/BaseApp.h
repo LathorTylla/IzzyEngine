@@ -84,7 +84,7 @@ public:
 			WNDPROC wndproc);
 
 public:
-  // Global Variables
+  // Variables miembro de la clase BaseApp
   Window															m_window;
   Device															m_device;
   DeviceContext												m_deviceContext;
@@ -111,12 +111,12 @@ public:
   XMFLOAT3                            rotation;
   XMFLOAT3                            scale;
 
-  CBChangesEveryFrame cb;
-  CBNeverChanges cbNeverChanges;
-  CBChangeOnResize cbChangesOnResize;
+  CBChangesEveryFrame                 cb;
+  CBNeverChanges                      cbNeverChanges;
+  CBChangeOnResize                    cbChangesOnResize;
 
-  MeshComponent m_meshComponent;
-  Camera m_camera;
+  MeshComponent                       m_meshComponent;
+  Camera                              m_camera;
 
   UserInterface                       m_userInterface;
 

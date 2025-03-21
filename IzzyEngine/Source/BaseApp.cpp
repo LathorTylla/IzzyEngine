@@ -51,6 +51,7 @@ BaseApp::init() {
   // Define the input layout
   std::vector<D3D11_INPUT_ELEMENT_DESC> Layout;
 
+  // Create the input layout
   D3D11_INPUT_ELEMENT_DESC position;
   position.SemanticName = "POSITION";
   position.SemanticIndex = 0;
@@ -61,6 +62,7 @@ BaseApp::init() {
   position.InstanceDataStepRate = 0;
   Layout.push_back(position);
 
+  // Create the input layout
   D3D11_INPUT_ELEMENT_DESC texcoord;
   texcoord.SemanticName = "TEXCOORD";
   texcoord.SemanticIndex = 0;
@@ -133,6 +135,7 @@ BaseApp::init() {
         23,20,22
   };
 
+  // Create the mesh component
   for (SimpleVertex vertex : vertices) {
     m_meshComponent.m_vertex.push_back(vertex);
   }
@@ -140,22 +143,21 @@ BaseApp::init() {
   for (unsigned int index : indices) {
     m_meshComponent.m_index.push_back(index);
   }
-
+  // Set the number of vertices and indices
   m_meshComponent.m_numVertex = m_meshComponent.m_vertex.size();
   m_meshComponent.m_numIndex = m_meshComponent.m_index.size();
-
+  // Create the vertex buffer
   hr = m_vertexBuffer.init(m_device, m_meshComponent, D3D11_BIND_VERTEX_BUFFER);
 
   if (FAILED(hr))
     return hr;
-
+  // Create the index buffer
   hr = m_indexBuffer.init(m_device, m_meshComponent, D3D11_BIND_INDEX_BUFFER);
 
   if (FAILED(hr))
     return hr;
 
-  // Create the constant buffers
-
+  // Create the constant buffer
   hr = m_neverChanges.init(m_device, sizeof(CBNeverChanges));
   if (FAILED(hr))
     return hr;
@@ -167,7 +169,7 @@ BaseApp::init() {
   hr = m_changeEveryFrame.init(m_device, sizeof(CBChangesEveryFrame));
   if (FAILED(hr))
     return hr;
-
+  // Create the texture
   hr = m_textureCubeImg.init(m_device, "seafloor.dds", ExtensionType::DDS);
   if (FAILED(hr))
     return hr;
@@ -191,6 +193,7 @@ BaseApp::init() {
   XMVECTOR Up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
   m_View = XMMatrixLookAtLH(Eye, At, Up);
 
+  // Initialize the projection matrix
   m_userInterface.init(m_window.m_hWnd, m_device.m_device, m_deviceContext.m_deviceContext);
 
   return S_OK;
@@ -200,15 +203,20 @@ BaseApp::init() {
 void
 BaseApp::update() {
 
+  // Actualizar la interfaz de usuario
   m_userInterface.update();
 
+  // ventana de transform
   ImGui::Begin("Transform", nullptr, ImGuiWindowFlags_NoCollapse);
 
+  //Ventana transform x, y, z
   m_userInterface.vec3Control("Position", &position.x, 0.0f);
 
   ImGui::End();
 
+  //Ventana de prueba docking
   ImGui::Begin("Test Docking", nullptr, ImGuiWindowFlags_NoCollapse);
+  //Ventana de texto
   ImGui::Text("Wenas profe");
   ImGui::End();
   // Actualizar tiempo y rotación
@@ -217,6 +225,7 @@ BaseApp::update() {
     t += (float)XM_PI * 0.0125f;
   }
   else {
+    // Actualizar el tiempo
     static DWORD dwTimeStart = 0;
     DWORD dwTimeCur = GetTickCount();
     if (dwTimeStart == 0)
@@ -224,6 +233,7 @@ BaseApp::update() {
     t = (dwTimeCur - dwTimeStart) / 1000.0f;
   }
 
+  // Actualizar la rotación del objeto
   InputActionMap(t);
   rotation.y = t;
   //Esto seria como nuestro transform
@@ -268,16 +278,12 @@ BaseApp::render() {
     m_depthStencilView,
     1,
     ClearColor);
-
   // Set Viewport
-  //g_deviceContext.RSSetViewports(1, &vp);
   m_viewport.render(m_deviceContext);
   // Set Depth Stencil View
   m_depthStencilView.render(m_deviceContext);
 
-  // Configurar los buffers y shaders para el pipeline
-  //g_deviceContext.IASetInputLayout(g_pVertexLayout);
-  //g_inputLayout.render(g_deviceContext);
+  
   m_shaderProgram.render(m_deviceContext);
   m_vertexBuffer.render(m_deviceContext, 0, 1);
   m_indexBuffer.render(m_deviceContext, 0, 1, false, DXGI_FORMAT_R32_UINT);
@@ -305,7 +311,6 @@ BaseApp::destroy() {
 
   if (m_deviceContext.m_deviceContext) m_deviceContext.m_deviceContext->ClearState();
 
-
   m_textureCubeImg.destroy();
   m_neverChanges.destroy();
   m_changeOnResize.destroy();
@@ -328,8 +333,8 @@ BaseApp::destroy() {
 void 
 BaseApp::InputActionMap(float deltaTime) {
 
-  float sensibility = 0.0001f;
-  float moveSpeedCamera = 0.0001f;
+  float sensibility = 0.0001f;     //sensibilidad del movimiento
+  float moveSpeedCamera = 0.0001f; //velocidad de la camara
 
   //movmiento del cubo por teclas W A S D
 
@@ -381,13 +386,13 @@ BaseApp::updateCamera() {
 
 void
 BaseApp::rotateCamera(int mouseX, int mouseY) {
-  float offsetX = (mouseX - lastX) * sensitivity;
-  float offsetY = (mouseY - lastY) * sensitivity;
-  lastX = mouseX;
-  lastY = mouseY;
+  float offsetX = (mouseX - lastX) * sensitivity; //sensibilidad del movimiento X
+  float offsetY = (mouseY - lastY) * sensitivity; //sensibilidad del movimiento Y
+  lastX = mouseX; //actualiza la ultima posicion en X
+  lastY = mouseY; //actualiza la ultima posicion en Y
 
-  m_camera.yaw += offsetX;
-  m_camera.pitch += offsetY;
+  m_camera.yaw += offsetX;   //actualiza el yaw
+  m_camera.pitch += offsetY; //actualiza el pitch
 
   // Limitar la inclinación de la cámara
   if (m_camera.pitch > 1.5f) m_camera.pitch = 1.5f;
@@ -403,8 +408,8 @@ BaseApp::rotateCamera(int mouseX, int mouseY) {
 
   XMVECTOR right = XMVector3Cross(forward, XMLoadFloat3(&m_camera.up));
 
-  XMStoreFloat3(&m_camera.forward, XMVector3Normalize(forward));
-  XMStoreFloat3(&m_camera.right, XMVector3Normalize(right));
+  XMStoreFloat3(&m_camera.forward, XMVector3Normalize(forward)); //normaliza el vector forward
+  XMStoreFloat3(&m_camera.right, XMVector3Normalize(right));     //normaliza el vector right
 }
   
  

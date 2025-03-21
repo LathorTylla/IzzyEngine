@@ -1,13 +1,16 @@
 #include "Prerequisites.h"
 #include "BaseApp.h"
 
-BaseApp app;
+BaseApp app; // Instancia de la clase BaseApp
 
-extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-//--------------------------------------------------------------------------------------
+extern IMGUI_IMPL_API 
+LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, 
+																			 UINT msg, 
+																			 WPARAM wParam, 
+																			 LPARAM lParam);
+
 // Called every time the application receives a message
-//--------------------------------------------------------------------------------------
 LRESULT CALLBACK
 WndProc(HWND hWnd,
 				unsigned int message,
@@ -67,8 +70,9 @@ WndProc(HWND hWnd,
 
 		return 0;
 	}
-	int WINAPI
-	wWinMain(HINSTANCE hInstance,
+// Entry point for the application
+int WINAPI
+wWinMain(HINSTANCE hInstance,
 					 HINSTANCE hPrevInstance,
 					 LPWSTR lpCmdLine,
 					 int nCmdShow) {

@@ -436,7 +436,6 @@
     <ClCompile Include="imgui-docking\imgui-docking\imgui_draw.cpp" />
     <ClCompile Include="imgui-docking\imgui-docking\imgui_tables.cpp" />
     <ClCompile Include="imgui-docking\imgui-docking\imgui_widgets.cpp" />
-    <ClCompile Include="Include\UserInterface.cpp" />
     <ClCompile Include="IzzyEngine.cpp" />
     <ClCompile Include="Source\BaseApp.cpp" />
     <ClCompile Include="Source\Buffer.cpp" />
@@ -449,6 +448,7 @@
     <ClCompile Include="Source\ShaderProgram.cpp" />
     <ClCompile Include="Source\Swapchain.cpp" />
     <ClCompile Include="Source\Texture.cpp" />
+    <ClCompile Include="Source\UserInterface.cpp" />
     <ClCompile Include="Source\Viewport.cpp" />
     <ClCompile Include="Source\Window.cpp" />
   </ItemGroup>

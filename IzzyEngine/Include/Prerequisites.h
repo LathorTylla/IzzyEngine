@@ -26,12 +26,14 @@
  * @brief Macros utilizadas para depuración y gestión de recursos en DirectX 11.
  */
 
-//ImGUI
+/*
+* @brief Librerías de ImGui.
+*/
 
-#include "imgui.h"
-#include "imgui_impl_win32.h"
-#include "imgui_impl_dx11.h"
-#include <imgui_internal.h>
+#include "imgui.h"            // Librería principal de ImGui.
+#include "imgui_impl_win32.h" // Implementación de ImGui para Windows.
+#include "imgui_impl_dx11.h"  // Implementación de ImGui para DirectX 11.
+#include <imgui_internal.h>   // Implementación interna de ImGui.
 
 /*
  * @brief Libera un recurso de DirectX y lo establece en nullptr para evitar accesos inválidos.

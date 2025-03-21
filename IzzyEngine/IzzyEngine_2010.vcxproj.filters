@@ -77,7 +77,6 @@
     <ClInclude Include="Include\MeshComponent.h">
       <Filter>Includes</Filter>
     </ClInclude>
-    <ClInclude Include="Include\SamplerState.h" />
     <ClInclude Include="imgui-docking\imgui-docking\backends\imgui_impl_dx11.h">
       <Filter>Imgui\src</Filter>
     </ClInclude>
@@ -103,6 +102,9 @@
       <Filter>Imgui\Includes</Filter>
     </ClInclude>
     <ClInclude Include="Include\UserInterface.h">
+      <Filter>Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\SamplerState.h">
       <Filter>Includes</Filter>
     </ClInclude>
   </ItemGroup>
@@ -144,7 +146,6 @@
     <ClCompile Include="Source\Buffer.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\SamplerState.cpp" />
     <ClCompile Include="imgui-docking\imgui-docking\imgui.cpp">
       <Filter>Imgui\src</Filter>
     </ClCompile>
@@ -166,7 +167,10 @@
     <ClCompile Include="imgui-docking\imgui-docking\backends\imgui_impl_win32.cpp">
       <Filter>Imgui\src</Filter>
     </ClCompile>
-    <ClCompile Include="Include\UserInterface.cpp">
+    <ClCompile Include="Source\UserInterface.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SamplerState.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>

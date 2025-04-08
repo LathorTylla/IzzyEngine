@@ -107,6 +107,9 @@
     <ClInclude Include="Include\SamplerState.h">
       <Filter>Includes</Filter>
     </ClInclude>
+    <ClInclude Include="Include\ModelLoader.h">
+      <Filter>Includes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="IzzyEngine.cpp" />
@@ -171,6 +174,9 @@
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\SamplerState.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ModelLoader.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>

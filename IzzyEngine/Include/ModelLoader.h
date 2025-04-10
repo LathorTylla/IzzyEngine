@@ -4,34 +4,33 @@
 #include "fbxsdk.h"
 
 class 
-ModelLoader{
+ModelLoader {
 public:
-  ModelLoader() = default;
-  ~ModelLoader() = default;
+	ModelLoader() = default;
+	~ModelLoader() = default;
 
-  bool 
-  LoadModel(const std::string& filePath);
+	bool
+	InitializeFBXManager();
 
-  void 
+	bool 
+	LoadFBXModel(const std::string & filePath);
+
+	void 
   ProcessFBXNode(FbxNode* node);
 
   void 
   ProcessFBXMesh(FbxNode* node);
 
   void 
-  ProcessFBXMaterial(FbxSurfaceMaterial* material);
+  ProcessFBXMaterials(FbxSurfaceMaterial* material);
 
-  std::vector<std::string>
-    GetTextureFileNames() const { return textureFileNames; }
+	std::vector<std::string> 
+  GetTextureFileNames() const { return textureFileNames; }
 
 private:
-
-  FbxManager* lSdkManager;
-  FbxScene* lScene;
-  std::vector<std::string> textureFileNames;
-
+	FbxManager* lSdkManager;
+	FbxScene* lScene;
+	std::vector<std::string> textureFileNames;
 public:
-  std::vector<MeshComponent> meshes;
-
+	std::vector<MeshComponent> meshes;
 };
-

@@ -13,6 +13,7 @@
 #include "MeshComponent.h"
 #include "SamplerState.h"
 #include "userInterface.h"
+#include "ModelLoader.h"
 
 /*
  * @brief BaseApp.
@@ -119,6 +120,8 @@ public:
   Camera                              m_camera;
 
   UserInterface                       m_userInterface;
+
+  ModelLoader                         m_psyduck;
 
 
   bool keys[256] = { false }; // Arreglo de teclas para manejar los inputs de teclado

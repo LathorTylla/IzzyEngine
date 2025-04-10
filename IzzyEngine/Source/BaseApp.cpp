@@ -79,6 +79,9 @@ BaseApp::init() {
   if (FAILED(hr))
     return hr;
 
+  // Load Model
+  m_psyduck.LoadFBXModel("Models/Psyduck.FBX");
+
   // Create vertex buffer
   SimpleVertex
     vertices[] = {

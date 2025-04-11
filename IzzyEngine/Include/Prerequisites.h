@@ -15,6 +15,11 @@
 //<memory>
 #include <thread>     /* Librería para manejo de múltiples hilos de ejecución. */
 
+// Third Parties
+#include "Utilities\Memory\TSharedPointer.h"
+#include "Utilities\Memory\TWeakPointer.h"
+#include "Utilities\Memory\TStaticPtr.h"
+#include "Utilities\Memory\TUniquePtr.h"
 //Librerias DirectX
 #include <D3D11.h>        /* Interfaz principal para la gestión de Direct3D 11. */
 #include <D3DX11.h>       /* Extensiones de Direct3D 11 (deprecated en versiones recientes). */

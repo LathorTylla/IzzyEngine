@@ -27,6 +27,24 @@
     <Filter Include="Imgui\src">
       <UniqueIdentifier>{d1154785-7079-484c-ac18-443abda10339}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Includes\Utilities">
+      <UniqueIdentifier>{eb98498c-f273-4562-a102-6083314241c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Includes\Utilities\Matrix">
+      <UniqueIdentifier>{74016bb6-abf9-49a9-8d27-8bc29dfe27bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Includes\Utilities\Memory">
+      <UniqueIdentifier>{55dba648-0252-46ab-ae98-9c724866ed3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Includes\Utilities\Structures">
+      <UniqueIdentifier>{8a1ec166-2956-41f1-a0aa-9af2312c4478}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Includes\Utilities\Vectors">
+      <UniqueIdentifier>{bde51421-e669-4b15-aa60-437cebb1fad6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Includes\ECS">
+      <UniqueIdentifier>{6ec48df2-660f-42c6-8f2b-222376f52c56}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Prerequisites.h">
@@ -109,6 +127,57 @@
     </ClInclude>
     <ClInclude Include="Include\ModelLoader.h">
       <Filter>Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\ECS\Entity.h">
+      <Filter>Includes\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Utilities\Matrix\Matrix2x2.h">
+      <Filter>Includes\Utilities\Matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Utilities\Matrix\Matrix3x3.h">
+      <Filter>Includes\Utilities\Matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Utilities\Matrix\Matrix4x4.h">
+      <Filter>Includes\Utilities\Matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Utilities\Memory\TSharedPointer.h">
+      <Filter>Includes\Utilities\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Utilities\Memory\TStaticPtr.h">
+      <Filter>Includes\Utilities\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Utilities\Memory\TUniquePtr.h">
+      <Filter>Includes\Utilities\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Utilities\Memory\TWeakPointer.h">
+      <Filter>Includes\Utilities\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Utilities\Vectors\Quaternion.h">
+      <Filter>Includes\Utilities\Vectors</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Utilities\Vectors\Vector2.h">
+      <Filter>Includes\Utilities\Vectors</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Utilities\Vectors\Vector3.h">
+      <Filter>Includes\Utilities\Vectors</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Utilities\Vectors\Vector4.h">
+      <Filter>Includes\Utilities\Vectors</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Utilities\Structures\TArray.h">
+      <Filter>Includes\Utilities\Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Utilities\Structures\TMap.h">
+      <Filter>Includes\Utilities\Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Utilities\Structures\TPair.h">
+      <Filter>Includes\Utilities\Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Utilities\Structures\TSet.h">
+      <Filter>Includes\Utilities\Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\ECS\Component.h">
+      <Filter>Includes\ECS</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -45,6 +45,12 @@
     <Filter Include="Includes\ECS">
       <UniqueIdentifier>{6ec48df2-660f-42c6-8f2b-222376f52c56}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Includes\Utilities\Utilities">
+      <UniqueIdentifier>{416175f0-ad07-4a75-80be-525b1b5421ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ECS">
+      <UniqueIdentifier>{e9b71e7f-6e74-49bc-b77b-3521ba6bcf1d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Prerequisites.h">
@@ -179,6 +185,15 @@
     <ClInclude Include="Include\ECS\Component.h">
       <Filter>Includes\ECS</Filter>
     </ClInclude>
+    <ClInclude Include="Include\ECS\Actor.h">
+      <Filter>Includes\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\ECS\Transform.h">
+      <Filter>Includes\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Utilities\Utilities\EngineMath.h">
+      <Filter>Includes\Utilities\Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="IzzyEngine.cpp" />
@@ -247,6 +262,12 @@
     </ClCompile>
     <ClCompile Include="Source\ModelLoader.cpp">
       <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ECS\Actor.cpp">
+      <Filter>Source\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ECS\Transform.cpp">
+      <Filter>Source\ECS</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

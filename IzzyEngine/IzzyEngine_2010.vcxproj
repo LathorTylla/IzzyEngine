@@ -454,6 +454,8 @@
     <ClCompile Include="Source\DepthStencilView.cpp" />
     <ClCompile Include="Source\Device.cpp" />
     <ClCompile Include="Source\DeviceContext.cpp" />
+    <ClCompile Include="Source\ECS\Actor.cpp" />
+    <ClCompile Include="Source\ECS\Transform.cpp" />
     <ClCompile Include="Source\InputLayout.cpp" />
     <ClCompile Include="Source\ModelLoader.cpp" />
     <ClCompile Include="Source\RenderTargetView.cpp" />
@@ -482,8 +484,10 @@
     <ClInclude Include="Include\DepthStencilView.h" />
     <ClInclude Include="Include\Device.h" />
     <ClInclude Include="Include\DeviceContext.h" />
+    <ClInclude Include="Include\ECS\Actor.h" />
     <ClInclude Include="Include\ECS\Component.h" />
     <ClInclude Include="Include\ECS\Entity.h" />
+    <ClInclude Include="Include\ECS\Transform.h" />
     <ClInclude Include="Include\MeshComponent.h" />
     <ClInclude Include="Include\ModelLoader.h" />
     <ClInclude Include="Include\SamplerState.h" />
@@ -507,6 +511,7 @@
     <ClInclude Include="Include\Utilities\Structures\TMap.h" />
     <ClInclude Include="Include\Utilities\Structures\TPair.h" />
     <ClInclude Include="Include\Utilities\Structures\TSet.h" />
+    <ClInclude Include="Include\Utilities\Utilities\EngineMath.h" />
     <ClInclude Include="Include\Utilities\Vectors\Quaternion.h" />
     <ClInclude Include="Include\Utilities\Vectors\Vector2.h" />
     <ClInclude Include="Include\Utilities\Vectors\Vector3.h" />

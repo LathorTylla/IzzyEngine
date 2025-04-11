@@ -14,6 +14,7 @@
 #include "SamplerState.h"
 #include "userInterface.h"
 #include "ModelLoader.h"
+#include "ECS/Actor.h"
 
 /*
  * @brief BaseApp.
@@ -96,32 +97,24 @@ public:
   DepthStencilView										m_depthStencilView;
   Viewport														m_viewport;
   ShaderProgram												m_shaderProgram;
-  Buffer															m_vertexBuffer;
-  Buffer															m_indexBuffer;
   Buffer 															m_neverChanges;
   Buffer 															m_changeOnResize;
   Buffer 															m_changeEveryFrame;
-  Texture 														m_textureCubeImg;
-  SamplerState 												m_samplerState;
-  XMMATRIX                            m_modelMatrix;
   XMMATRIX                            m_View;
   XMMATRIX                            m_Projection;
   XMFLOAT4                            m_vMeshColor;
 
-  XMFLOAT3                            position;
-  XMFLOAT3                            rotation;
-  XMFLOAT3                            scale;
-
-  CBChangesEveryFrame                 cb;
   CBNeverChanges                      cbNeverChanges;
   CBChangeOnResize                    cbChangesOnResize;
 
-  MeshComponent                       m_meshComponent;
   Camera                              m_camera;
 
   UserInterface                       m_userInterface;
 
   ModelLoader                         m_psyduck;
+  EngineUtilities::TSharedPointer<Actor> APsyduck;
+ 	std::vector<Texture>								m_psyduckTextures;
+ 	Texture                             m_default;
 
 
   bool keys[256] = { false }; // Arreglo de teclas para manejar los inputs de teclado

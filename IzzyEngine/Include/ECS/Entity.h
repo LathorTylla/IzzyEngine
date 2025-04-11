@@ -1,51 +1,31 @@
 #pragma once
 #include "Prerequisites.h"
 #include "Component.h"
+class DeviceContext;
 
-class
-  Window;
-
-/**
- * @class Entity
- * @brief Clase base para todas las entidades en el motor.
- *
- * La clase Entity representa un objeto en el juego que puede poseer múltiples componentes,
- * permitiendo así comportamientos y características específicas mediante un sistema de entidad-componente.
- */
 class
   Entity {
 public:
-
   /**
-  * @brief Destructor virtual de la clase Entity.
-  *
-  * Permite la destrucción correcta de las entidades derivadas.
-  */
+   * @brief Destructor virtual.
+   */
   virtual
     ~Entity() = default;
 
   /**
    * @brief Método virtual puro para actualizar la entidad.
-   *
-   * Este método es sobrescrito por clases derivadas para implementar la lógica de actualización
-   * específica de la entidad.
-   *
-   * @param deltaTime Tiempo transcurrido desde el último cuadro, usado para cálculos dependientes del tiempo.
+   * @param deltaTime El tiempo transcurrido desde la última actualización.
+   * @param deviceContext Contexto del dispositivo para operaciones gráficas.
    */
-  virtual
-    void
-    update(float deltaTime) = 0;
+  virtual void
+    update(float deltaTime, DeviceContext& deviceContext) = 0;
 
   /**
    * @brief Método virtual puro para renderizar la entidad.
-   *
-   * Este método es sobrescrito por clases derivadas para implementar la lógica de renderizado específica de la entidad.
-   *
-   * @param window Referencia a la ventana en la que se renderizará la entidad.
+   * @param deviceContext Contexto del dispositivo para operaciones gráficas.
    */
-  virtual
-    void
-    render(Window& window) = 0;
+  virtual void
+    render(DeviceContext& deviceContext) = 0;
 
   /*
    * @brief Añade un componente a la entidad.
@@ -60,7 +40,7 @@ public:
   void
     addComponent(EngineUtilities::TSharedPointer<T> component) {
     static_assert(std::is_base_of<Component, T>::value, "T must be derived from Component");
-    components.push_back(component.template dynamic_pointer_cast<Component>());
+    m_components.push_back(component.template dynamic_pointer_cast<Component>());
   }
   /*
    * @brief Obtiene un componente de la entidad.
@@ -75,7 +55,7 @@ public:
   template<typename T>
   EngineUtilities::TSharedPointer<T>
     getComponent() {
-    for (auto& component : components) {
+    for (auto& component : m_components) {
       EngineUtilities::TSharedPointer<T> specificComponent = component.template dynamic_pointer_cast<T>();
       if (specificComponent) {
         return specificComponent;
@@ -89,5 +69,5 @@ protected:
     isActive;
   int
     id;
-  std::vector<EngineUtilities::TSharedPointer<Component>> components;
+  std::vector<EngineUtilities::TSharedPointer<Component>> m_components;
 };

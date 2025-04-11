@@ -80,85 +80,8 @@ BaseApp::init() {
     return hr;
 
   // Load Model
-  m_psyduck.LoadFBXModel("Models/Psyduck.FBX");
+  //m_psyduck.LoadFBXModel("Models/Psyduck.FBX");
 
-  // Create vertex buffer
-  SimpleVertex
-    vertices[] = {
-        { XMFLOAT3(-1.0f, 1.0f, -1.0f), XMFLOAT2(0.0f, 0.0f) },
-        { XMFLOAT3(1.0f, 1.0f, -1.0f), XMFLOAT2(1.0f, 0.0f) },
-        { XMFLOAT3(1.0f, 1.0f, 1.0f), XMFLOAT2(1.0f, 1.0f) },
-        { XMFLOAT3(-1.0f, 1.0f, 1.0f), XMFLOAT2(0.0f, 1.0f) },
-
-        { XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT2(0.0f, 0.0f) },
-        { XMFLOAT3(1.0f, -1.0f, -1.0f), XMFLOAT2(1.0f, 0.0f) },
-        { XMFLOAT3(1.0f, -1.0f, 1.0f), XMFLOAT2(1.0f, 1.0f) },
-        { XMFLOAT3(-1.0f, -1.0f, 1.0f), XMFLOAT2(0.0f, 1.0f) },
-
-        { XMFLOAT3(-1.0f, -1.0f, 1.0f), XMFLOAT2(0.0f, 0.0f) },
-        { XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT2(1.0f, 0.0f) },
-        { XMFLOAT3(-1.0f, 1.0f, -1.0f), XMFLOAT2(1.0f, 1.0f) },
-        { XMFLOAT3(-1.0f, 1.0f, 1.0f), XMFLOAT2(0.0f, 1.0f) },
-
-        { XMFLOAT3(1.0f, -1.0f, 1.0f), XMFLOAT2(0.0f, 0.0f) },
-        { XMFLOAT3(1.0f, -1.0f, -1.0f), XMFLOAT2(1.0f, 0.0f) },
-        { XMFLOAT3(1.0f, 1.0f, -1.0f), XMFLOAT2(1.0f, 1.0f) },
-        { XMFLOAT3(1.0f, 1.0f, 1.0f), XMFLOAT2(0.0f, 1.0f) },
-
-        { XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT2(0.0f, 0.0f) },
-        { XMFLOAT3(1.0f, -1.0f, -1.0f), XMFLOAT2(1.0f, 0.0f) },
-        { XMFLOAT3(1.0f, 1.0f, -1.0f), XMFLOAT2(1.0f, 1.0f) },
-        { XMFLOAT3(-1.0f, 1.0f, -1.0f), XMFLOAT2(0.0f, 1.0f) },
-
-        { XMFLOAT3(-1.0f, -1.0f, 1.0f), XMFLOAT2(0.0f, 0.0f) },
-        { XMFLOAT3(1.0f, -1.0f, 1.0f), XMFLOAT2(1.0f, 0.0f) },
-        { XMFLOAT3(1.0f, 1.0f, 1.0f), XMFLOAT2(1.0f, 1.0f) },
-        { XMFLOAT3(-1.0f, 1.0f, 1.0f), XMFLOAT2(0.0f, 1.0f) },
-  };
-
-  // Create vertex buffer
-  unsigned int
-    indices[] = {
-        3,1,0,
-        2,1,3,
-
-        6,4,5,
-        7,4,6,
-
-        11,9,8,
-        10,9,11,
-
-        14,12,13,
-        15,12,14,
-
-        19,17,16,
-        18,17,19,
-
-        22,20,21,
-        23,20,22
-  };
-
-  // Create the mesh component
-  for (SimpleVertex vertex : vertices) {
-    m_meshComponent.m_vertex.push_back(vertex);
-  }
-
-  for (unsigned int index : indices) {
-    m_meshComponent.m_index.push_back(index);
-  }
-  // Set the number of vertices and indices
-  m_meshComponent.m_numVertex = m_meshComponent.m_vertex.size();
-  m_meshComponent.m_numIndex = m_meshComponent.m_index.size();
-  // Create the vertex buffer
-  hr = m_vertexBuffer.init(m_device, m_meshComponent, D3D11_BIND_VERTEX_BUFFER);
-
-  if (FAILED(hr))
-    return hr;
-  // Create the index buffer
-  hr = m_indexBuffer.init(m_device, m_meshComponent, D3D11_BIND_INDEX_BUFFER);
-
-  if (FAILED(hr))
-    return hr;
 
   // Create the constant buffer
   hr = m_neverChanges.init(m_device, sizeof(CBNeverChanges));
@@ -169,27 +92,6 @@ BaseApp::init() {
   if (FAILED(hr))
     return hr;
 
-  hr = m_changeEveryFrame.init(m_device, sizeof(CBChangesEveryFrame));
-  if (FAILED(hr))
-    return hr;
-  // Create the texture
-  hr = m_textureCubeImg.init(m_device, "seafloor.dds", ExtensionType::DDS);
-  if (FAILED(hr))
-    return hr;
-
-  // Create the sample state
-  hr = m_samplerState.init(m_device);
-
-  if (FAILED(hr))
-    return hr;
-
-  //Matriz de identidad
-  scale.x = 1;
-  scale.y = 1;
-  scale.z = 1;
-  // Initialize the world matrices
-  m_modelMatrix = XMMatrixIdentity();
-
   // Initialize the view matrix
   XMVECTOR Eye = XMVectorSet(0.0f, 3.0f, -6.0f, 0.0f);
   XMVECTOR At = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
@@ -199,8 +101,43 @@ BaseApp::init() {
   // Initialize the projection matrix
   m_userInterface.init(m_window.m_hWnd, m_device.m_device, m_deviceContext.m_deviceContext);
 
+  // Load the Texture
+  Texture Body;
+  Body.init(m_device, "Textures/Body.png", ExtensionType::PNG);
+  Texture Eyes;
+  Eyes.init(m_device, "Textures/Eye.png", ExtensionType::PNG);
+  Texture Iris;
+  Iris.init(m_device, "Textures/Iris.png", ExtensionType::PNG);
+
+  m_default.init(m_device, "Textures/Default.png", ExtensionType::PNG);
+
+  m_psyduckTextures.push_back(Body);
+  m_psyduckTextures.push_back(Eyes);
+  m_psyduckTextures.push_back(Iris);
+  m_psyduckTextures.push_back(m_default);
+
+  // Load Model
+  m_psyduck.LoadFBXModel("Models/Psyduck.FBX");
+  APsyduck = EngineUtilities::MakeShared<Actor>(m_device);
+  if (!APsyduck.isNull()) {
+    // Init Actor Transform
+    APsyduck->getComponent<Transform>()->setTransform(EngineUtilities::Vector3(-0.9f, -2.0f, 2.0f),
+                                                      EngineUtilities::Vector3(XM_PI / 0.01f, 3.0f, XM_PI / 0.01f),
+                                                      EngineUtilities::Vector3(0.03f, 0.03f, 0.03f));
+    // Init Actor Mesh
+    APsyduck->setMesh(m_device, m_psyduck.meshes);
+    // Init Actor Textures
+    APsyduck->setTextures(m_psyduckTextures);
+
+    std::string msg = APsyduck->getName() + " - Actor accessed successfully.";
+    MESSAGE("Actor", "Actor", msg.c_str());
+  }
+  else {
+    MESSAGE("Actor", "Actor", "Actor resource not found.");
+  }
+
+
   return S_OK;
-	return E_NOTIMPL;
 }
 
 void
@@ -212,8 +149,6 @@ BaseApp::update() {
   // ventana de transform
   ImGui::Begin("Transform", nullptr, ImGuiWindowFlags_NoCollapse);
 
-  //Ventana transform x, y, z
-  m_userInterface.vec3Control("Position", &position.x, 0.0f);
 
   ImGui::End();
 
@@ -238,26 +173,6 @@ BaseApp::update() {
 
   // Actualizar la rotación del objeto
   InputActionMap(t);
-  rotation.y = t;
-  //Esto seria como nuestro transform
-  // Actualizar la rotación del objeto y el color
-  XMMATRIX scaleMatrix = XMMatrixScaling(scale.x, scale.y, scale.z);
-  XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
-  XMMATRIX translationMatrix = XMMatrixTranslation(position.x, position.y, position.z);
-
-  // Actualizar la matriz del modelo por escala, rotación y traslación
-  m_modelMatrix = scaleMatrix * rotationMatrix * translationMatrix;
-  m_vMeshColor = XMFLOAT4(
-                         (sinf(t * 1.0f) + 1.0f) * 0.5f,
-                         (cosf(t * 3.0f) + 1.0f) * 0.5f,
-                         (sinf(t * 5.0f) + 1.0f) * 0.5f,
-                         1.0f);
-
-  // componer la matriz en orden de escala, rotacion y traslación
-  // Actualizar el buffer constante del frame
-  cb.mWorld = XMMatrixTranspose(m_modelMatrix);
-  cb.vMeshColor = m_vMeshColor;
-  m_changeEveryFrame.update(m_deviceContext, 0, nullptr, &cb, 0, 0);
 
   float FOV = XMConvertToRadians(90.0f);
   m_Projection = XMMatrixPerspectiveFovLH(FOV, m_window.m_width / (float)m_window.m_height, 0.01f, 100.0f);
@@ -266,6 +181,18 @@ BaseApp::update() {
   // Actualizar la proyección en el buffer constante
   cbChangesOnResize.mProjection = XMMatrixTranspose(m_Projection);
   m_changeOnResize.update(m_deviceContext, 0, nullptr, &cbChangesOnResize, 0, 0);
+
+  // Actualizar info logica del mesh
+  APsyduck->update(0, m_deviceContext);
+
+  ImGui::Begin("Transform");
+
+  // Draw the structure
+  m_userInterface.vec3Control("Position", const_cast<float*>(APsyduck->getComponent<Transform>()->getPosition().data()));
+  m_userInterface.vec3Control("Rotation", const_cast<float*>(APsyduck->getComponent<Transform>()->getRotation().data()));
+  m_userInterface.vec3Control("Scale", const_cast<float*>(APsyduck->getComponent<Transform>()->getScale().data()));
+
+  ImGui::End();
 }
 
 void
@@ -276,33 +203,26 @@ BaseApp::render() {
                                 0.3f,
                                 1.0f }; // red, green, blue, alpha
 
+  m_viewport.render(m_deviceContext);
+
   // Set Render Target View
   m_renderTargetView.render(m_deviceContext,
-    m_depthStencilView,
-    1,
-    ClearColor);
-  // Set Viewport
-  m_viewport.render(m_deviceContext);
+                            m_depthStencilView,
+                            1,
+                            ClearColor);
+
   // Set Depth Stencil View
   m_depthStencilView.render(m_deviceContext);
 
   
   m_shaderProgram.render(m_deviceContext);
-  m_vertexBuffer.render(m_deviceContext, 0, 1);
-  m_indexBuffer.render(m_deviceContext, 0, 1, false, DXGI_FORMAT_R32_UINT);
-  m_deviceContext.IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+  APsyduck->render(m_deviceContext);
 
   m_neverChanges.render(m_deviceContext, 0, 1);
   m_changeOnResize.render(m_deviceContext, 1, 1);
-  m_changeEveryFrame.render(m_deviceContext, 2, 1);
+ // m_changeEveryFrame.render(m_deviceContext, 2, 1);
 
-  m_changeEveryFrame.render(m_deviceContext, 2, 1, true);
-
-  m_textureCubeImg.render(m_deviceContext, 0, 1);
-
-  m_samplerState.render(m_deviceContext, 0,1);
-
-  m_deviceContext.DrawIndexed(m_meshComponent.m_index.size(), 0, 0);
 
   m_userInterface.render();
 
@@ -314,12 +234,10 @@ BaseApp::destroy() {
 
   if (m_deviceContext.m_deviceContext) m_deviceContext.m_deviceContext->ClearState();
 
-  m_textureCubeImg.destroy();
+  APsyduck->destroy();
   m_neverChanges.destroy();
   m_changeOnResize.destroy();
   m_changeEveryFrame.destroy();
-  m_vertexBuffer.destroy();
-  m_indexBuffer.destroy();
   m_shaderProgram.destroy();
 
 
@@ -341,7 +259,7 @@ BaseApp::InputActionMap(float deltaTime) {
 
   //movmiento del cubo por teclas W A S D
 
-  if (keys['W']) {
+  /*if (keys['W']) {
     position.y += sensibility * deltaTime;
   }
   if (keys['S']) {
@@ -358,7 +276,7 @@ BaseApp::InputActionMap(float deltaTime) {
   }
   if (keys['Q']) {
     position.z -= sensibility * deltaTime;
-  }
+  }*/
 
   XMVECTOR position = XMLoadFloat3(&m_camera.pos);
   XMVECTOR forward = XMLoadFloat3(&m_camera.forward);

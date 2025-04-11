@@ -28,7 +28,7 @@
 */
 #pragma once
 
-#include "Utilities/EngineMath.h"
+#include "Utilities/Utilities/EngineMath.h"
 namespace EngineUtilities {
 	/**
  * @brief A 3D vector class.
@@ -111,6 +111,16 @@ namespace EngineUtilities {
 				return Vector3(0, 0, 0);
 			}
 			return Vector3(x / mag, y / mag, z / mag);
+		}
+
+		void
+		zero() {
+			Vector3(0, 0, 0);
+		}
+
+		void
+		one() {
+			Vector3(1, 1, 1);
 		}
 
 		// Método para obtener un puntero a los datos como un arreglo

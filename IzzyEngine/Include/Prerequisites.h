@@ -126,6 +126,19 @@ ExtensionType {
   PNG = 1,      /* Formato PNG, comprimido sin pérdida de calidad. */
   JPG = 2       /* Formato JPG, comprimido con pérdida de calidad. */
 };
+/*
+ * @brief Enumeración para definir los diferentes tipos de componentes en el sistema.
+ *
+ * Esta enumeración se utiliza para identificar el tipo de componente que un objeto puede tener,
+ * como TRANSFORM, MESH, MATERIAL, entre otros.
+ */
+enum
+  ComponentType {
+  NONE = 0,     ///< Tipo de componente no especificado.
+  TRANSFORM = 1,///< Componente de transformación.
+  MESH = 2,     ///< Componente de malla.
+  MATERIAL = 3  ///< Componente de material.
+};
 
 enum 
 ShaderType {

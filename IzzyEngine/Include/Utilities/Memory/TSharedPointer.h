@@ -185,6 +185,10 @@ namespace EngineUtilities {
 		 */
 		T* operator->() const { return ptr; }
 
+		operator bool() const {
+			return ptr != nullptr;
+		}
+
 		/**
 		 * @brief Obtener el puntero crudo.
 		 *
@@ -247,6 +251,20 @@ namespace EngineUtilities {
 				// Asignar nuevo objeto y manejar el recuento de referencias
 				ptr = newPtr;
 				refCount = new int(1);
+			}
+		}
+		// Método de conversión para hacer cast dinámico
+		template<typename U>
+		TSharedPointer<U> dynamic_pointer_cast() const {
+			// Intenta convertir el puntero de tipo T a U
+			U* castedPtr = dynamic_cast<U*>(ptr);
+			if (castedPtr) {
+				// Si la conversión es exitosa, devuelve un nuevo TSharedPointer<U>
+				return TSharedPointer<U>(castedPtr, refCount);
+			}
+			else {
+				// Si falla la conversión, devuelve un TSharedPointer<U> nulo
+				return TSharedPointer<U>();
 			}
 		}
 	};

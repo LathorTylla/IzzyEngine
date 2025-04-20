@@ -136,6 +136,33 @@ BaseApp::init() {
     MESSAGE("Actor", "Actor", "Actor resource not found.");
   }
 
+  // Load the Texture
+  Texture GokuTexturas;
+  GokuTexturas.init(m_device, "Textures/GokuTexturas.png", ExtensionType::PNG);
+  
+  m_objTextures.push_back(GokuTexturas);
+  
+  m_objTextures.push_back(m_default);
+
+  // Load Model
+  m_objModel.LoadObjModel("Models/goku.obj");
+  AObjModel = EngineUtilities::MakeShared<Actor>(m_device);
+  if (!AObjModel.isNull()) {
+    // Init Actor Transform
+    AObjModel->getComponent<Transform>()->setTransform(EngineUtilities::Vector3(3.0f, -2.0f, 2.0f),
+      EngineUtilities::Vector3(XM_PI / 0.05f, 6.0f, XM_PI / 0.05f),
+      EngineUtilities::Vector3(1.00f, 1.00f, 1.00f));
+    // Init Actor Mesh
+    AObjModel->setMesh(m_device, m_objModel.meshes);
+    // Init Actor Textures
+    AObjModel->setTextures(m_objTextures);
+
+    std::string msg = AObjModel->getName() + " - Actor accessed successfully.";
+    MESSAGE("Actor", "Actor", msg.c_str());
+  }
+  else {
+    MESSAGE("Actor", "Actor", "Actor resource not found.");
+  }
 
   return S_OK;
 }
@@ -184,13 +211,15 @@ BaseApp::update() {
 
   // Actualizar info logica del mesh
   APsyduck->update(0, m_deviceContext);
+  // Actualizar info logica del mesh
+  AObjModel->update(0, m_deviceContext);
 
   ImGui::Begin("Transform");
 
   // Draw the structure
-  m_userInterface.vec3Control("Position", const_cast<float*>(APsyduck->getComponent<Transform>()->getPosition().data()));
-  m_userInterface.vec3Control("Rotation", const_cast<float*>(APsyduck->getComponent<Transform>()->getRotation().data()));
-  m_userInterface.vec3Control("Scale", const_cast<float*>(APsyduck->getComponent<Transform>()->getScale().data()));
+  m_userInterface.vec3Control("Position", const_cast<float*>(AObjModel->getComponent<Transform>()->getPosition().data()));
+  m_userInterface.vec3Control("Rotation", const_cast<float*>(AObjModel->getComponent<Transform>()->getRotation().data()));
+  m_userInterface.vec3Control("Scale", const_cast<float*>(AObjModel->getComponent<Transform>()->getScale().data()));
 
   ImGui::End();
 }
@@ -219,6 +248,8 @@ BaseApp::render() {
 
   APsyduck->render(m_deviceContext);
 
+  AObjModel->render(m_deviceContext);
+
   m_neverChanges.render(m_deviceContext, 0, 1);
   m_changeOnResize.render(m_deviceContext, 1, 1);
  // m_changeEveryFrame.render(m_deviceContext, 2, 1);
@@ -234,6 +265,8 @@ BaseApp::destroy() {
 
   if (m_deviceContext.m_deviceContext) m_deviceContext.m_deviceContext->ClearState();
 
+  // Destroy the user interface
+  AObjModel->destroy();
   APsyduck->destroy();
   m_neverChanges.destroy();
   m_changeOnResize.destroy();

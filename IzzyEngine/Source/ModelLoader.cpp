@@ -1,4 +1,5 @@
 #include "ModelLoader.h"
+#include "obj/ObjLoader.h"
 
 bool
 ModelLoader::InitializeFBXManager() {
@@ -177,4 +178,39 @@ ModelLoader::ProcessFBXMaterials(FbxSurfaceMaterial* material) {
 			}
 		}
 	}
+}
+
+bool 
+ModelLoader::LoadObjModel(const std::string& filePath){
+	objl::Loader loader;
+	bool result = loader.LoadFile(filePath);
+	if (!result) {
+		ERROR("ModelLoader", "LoadOBJModel", ("Failed to load OBJ file: " + filePath).c_str());
+		return false;
+	}
+																							
+	for (const auto& mesh : loader.LoadedMeshes) {
+		std::vector<SimpleVertex> vertices;
+		std::vector<unsigned int> indices;
+
+		for (const auto& vertex : mesh.Vertices) {
+			SimpleVertex v;
+			v.Pos = XMFLOAT3(vertex.Position.X, vertex.Position.Y, vertex.Position.Z);
+			v.Tex = XMFLOAT2(vertex.TextureCoordinate.X, 1.0f - vertex.TextureCoordinate.Y); // Flip Y
+			vertices.push_back(v);
+		}
+
+		indices = mesh.Indices;
+
+		MeshComponent meshData;
+		meshData.m_name = mesh.MeshName;
+		meshData.m_vertex = vertices;
+		meshData.m_index = indices;
+		meshData.m_numVertex = vertices.size();
+		meshData.m_numIndex = indices.size();
+
+		meshes.push_back(meshData);
+	}
+
+  return true;
 }

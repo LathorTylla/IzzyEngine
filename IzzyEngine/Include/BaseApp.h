@@ -111,10 +111,16 @@ public:
 
   UserInterface                       m_userInterface;
 
+  //Modelos FBX
   ModelLoader                         m_psyduck;
   EngineUtilities::TSharedPointer<Actor> APsyduck;
  	std::vector<Texture>								m_psyduckTextures;
  	Texture                             m_default;
+
+  //Modelos OBJ
+  ModelLoader                         m_objModel;
+  EngineUtilities::TSharedPointer<Actor> AObjModel;
+  std::vector<Texture>								m_objTextures;
 
 
   bool keys[256] = { false }; // Arreglo de teclas para manejar los inputs de teclado

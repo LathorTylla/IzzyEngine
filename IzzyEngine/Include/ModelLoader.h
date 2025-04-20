@@ -27,6 +27,8 @@ public:
 	std::vector<std::string> 
   GetTextureFileNames() const { return textureFileNames; }
 
+  bool 
+	LoadObjModel(const std::string& filePath);
 private:
 	FbxManager* lSdkManager;
 	FbxScene* lScene;

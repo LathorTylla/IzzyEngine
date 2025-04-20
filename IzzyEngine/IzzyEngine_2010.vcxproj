@@ -490,6 +490,7 @@
     <ClInclude Include="Include\ECS\Transform.h" />
     <ClInclude Include="Include\MeshComponent.h" />
     <ClInclude Include="Include\ModelLoader.h" />
+    <ClInclude Include="Include\obj\ObjLoader.h" />
     <ClInclude Include="Include\SamplerState.h" />
     <ClInclude Include="Include\ShaderProgram.h" />
     <ClInclude Include="Include\InputLayout.h" />

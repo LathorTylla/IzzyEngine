@@ -3,29 +3,38 @@
 #include "Component.h"
 class DeviceContext;
 
+/*
+ * @class Entity
+ * @brief Clase base para todas las entidades en el sistema ECS.
+ *
+ * Esta clase define la interfaz básica para las entidades que pueden tener componentes asociados.
+ * Las entidades pueden ser actualizadas y renderizadas, y pueden contener múltiples componentes.
+ */
 class
-  Entity {
+Entity {
 public:
   /**
    * @brief Destructor virtual.
    */
   virtual
-    ~Entity() = default;
+  ~Entity() = default;
 
   /**
    * @brief Método virtual puro para actualizar la entidad.
    * @param deltaTime El tiempo transcurrido desde la última actualización.
    * @param deviceContext Contexto del dispositivo para operaciones gráficas.
    */
-  virtual void
-    update(float deltaTime, DeviceContext& deviceContext) = 0;
+  virtual 
+  void
+  update(float deltaTime, DeviceContext& deviceContext) = 0;
 
   /**
    * @brief Método virtual puro para renderizar la entidad.
    * @param deviceContext Contexto del dispositivo para operaciones gráficas.
    */
-  virtual void
-    render(DeviceContext& deviceContext) = 0;
+  virtual 
+  void
+  render(DeviceContext& deviceContext) = 0;
 
   /*
    * @brief Añade un componente a la entidad.
@@ -38,7 +47,7 @@ public:
 
   template <typename T>
   void
-    addComponent(EngineUtilities::TSharedPointer<T> component) {
+  addComponent(EngineUtilities::TSharedPointer<T> component) {
     static_assert(std::is_base_of<Component, T>::value, "T must be derived from Component");
     m_components.push_back(component.template dynamic_pointer_cast<Component>());
   }
@@ -65,9 +74,7 @@ public:
   }
 protected:
 
-  bool
-    isActive;
-  int
-    id;
+  bool isActive;
+  int id;
   std::vector<EngineUtilities::TSharedPointer<Component>> m_components;
 };

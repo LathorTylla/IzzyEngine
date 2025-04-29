@@ -2,7 +2,7 @@
 
 void
 Device::destroy() {
-	SAFE_RELEASE(m_device);
+  SAFE_RELEASE(m_device);	//Liberar el dispositivo
 }
 
 HRESULT
@@ -49,8 +49,10 @@ Device::CreateTexture2D(const D3D11_TEXTURE2D_DESC* pDesc,
 		ERROR("Device", "CreateTexture2D", "ppTexture2D is nullptr");
 		return E_POINTER;
 	}
-
-	HRESULT hr = m_device->CreateTexture2D(pDesc, pInitialData, ppTexture2D);
+  //Crear la textura 2D
+	HRESULT hr = m_device->CreateTexture2D(pDesc, 
+																				 pInitialData, 
+																				 ppTexture2D);
 
 	if (SUCCEEDED(hr)) {
 		MESSAGE("Device", "CreateTexture2D", "Texture 2D created Successfully");
@@ -77,7 +79,10 @@ Device::CreateDepthStencilView(ID3D11Resource* pResource,
 		return E_POINTER;
 	}
 
-	HRESULT hr = m_device->CreateDepthStencilView(pResource, pDesc, ppDepthStencilView);
+  //Crear el depth stencil view
+	HRESULT hr = m_device->CreateDepthStencilView(pResource, 
+																								pDesc, 
+																								ppDepthStencilView);
 
 		if (SUCCEEDED(hr)) {
 			MESSAGE("Device", "CreateDepthStencilView", "DepthStencilView created Successfully");
@@ -104,7 +109,11 @@ Device::CreateVertexShader(const void* pShaderBytecode,
 		return E_POINTER;
 	}
 
-	HRESULT hr = m_device->CreateVertexShader(pShaderBytecode, BytecodeLength, pClassLinkage, ppVertexShader);
+  //Crear el vertex shader
+	HRESULT hr = m_device->CreateVertexShader(pShaderBytecode, 
+																						BytecodeLength, 
+																						pClassLinkage, 
+																						ppVertexShader);
 
 	if (SUCCEEDED(hr)) {
 		MESSAGE("Device", "CreateDepthStencilView", "VertexShader created Successfully");
@@ -117,6 +126,7 @@ Device::CreateVertexShader(const void* pShaderBytecode,
 
 }
 
+//Crear el Input Layout
 HRESULT
 Device::CreateInputLayout(D3D11_INPUT_ELEMENT_DESC* pInputElementDescs,
 													unsigned int NumElements,
@@ -132,7 +142,12 @@ Device::CreateInputLayout(D3D11_INPUT_ELEMENT_DESC* pInputElementDescs,
 		return E_POINTER;
 	}
 
-	HRESULT hr = m_device->CreateInputLayout(pInputElementDescs, NumElements, pShaderBytecodeWithInputSignature, BytecodeLength, ppInputLayout);
+  //Crear el input layout
+	HRESULT hr = m_device->CreateInputLayout(pInputElementDescs, 
+																					 NumElements, 
+																					 pShaderBytecodeWithInputSignature, 
+																					 BytecodeLength, 
+																					 ppInputLayout);
 
 	if (SUCCEEDED(hr)) {
 		MESSAGE("Device", "CreateInputLayout", "InputLayout created successfully");
@@ -159,7 +174,11 @@ Device::CreatePixelShader(const void* pShaderBytecode,
 		return E_POINTER;
 	}
 
-	HRESULT hr = m_device->CreatePixelShader(pShaderBytecode, BytecodeLength, pClassLinkage, ppPixelShader);
+  //Crear el pixel shader
+	HRESULT hr = m_device->CreatePixelShader(pShaderBytecode,
+																					 BytecodeLength, 
+																					 pClassLinkage, 
+																					 ppPixelShader);
 
 	if (SUCCEEDED(hr)) {
 		MESSAGE("Device", "CreatePixelShader", "PixelShader created successfully");
@@ -185,7 +204,10 @@ Device::CreateBuffer(const D3D11_BUFFER_DESC* pDesc,
 		return E_POINTER;
 	}
 
-	HRESULT hr = m_device->CreateBuffer(pDesc, pInitialData, ppBuffer);
+  //Crear el buffer
+	HRESULT hr = m_device->CreateBuffer(pDesc, 
+																			pInitialData, 
+																			ppBuffer);
 
 	if (SUCCEEDED(hr)) {
 		MESSAGE("Device", "CreateBuffer", "Buffer created successfully");
@@ -210,7 +232,9 @@ Device::CreateSamplerState(const D3D11_SAMPLER_DESC* pSamplerDesc,
 		return E_POINTER;
 	}
 
-	HRESULT hr = m_device->CreateSamplerState(pSamplerDesc, ppSamplerState);
+  //Crear el sampler state
+	HRESULT hr = m_device->CreateSamplerState(pSamplerDesc, 
+																						ppSamplerState);
 
 	if (SUCCEEDED(hr)) {
 		MESSAGE("Device", "CreateSamplerState", "SamplerState created successfully");

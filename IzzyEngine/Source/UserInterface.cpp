@@ -11,25 +11,25 @@ void
 UserInterface::init(void* window, 
                     ID3D11Device* device, 
                     ID3D11DeviceContext* deviceContext){
-  IMGUI_CHECKVERSION();
-  ImGui::CreateContext();
-  ImGuiIO& io = ImGui::GetIO();
-  io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-  io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+  IMGUI_CHECKVERSION(); // Check ImGui version
+  ImGui::CreateContext(); // Create ImGui context
+  ImGuiIO& io = ImGui::GetIO(); // Get ImGui IO
+  io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable keyboard navigation
+  io.ConfigFlags |= ImGuiConfigFlags_DockingEnable; // Enable docking
 
-  ImGui::StyleColorsClassic();
+  ImGui::StyleColorsClassic();  // Set default style
 
-  setupStyle();
+  setupStyle(); // Setup custom style
 
   ImGuiStyle& style = ImGui::GetStyle();
   if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
   {
-    style.WindowRounding = 0.0f;
+    style.WindowRounding = 0.0f; 
     style.Colors[ImGuiCol_WindowBg].w = 1.0f;
   }
 
-  ImGui_ImplWin32_Init(window);
-  ImGui_ImplDX11_Init(device, deviceContext);
+  ImGui_ImplWin32_Init(window); // Initialize Win32
+  ImGui_ImplDX11_Init(device, deviceContext); // Initialize DX11
 }
 
 void 
@@ -41,61 +41,61 @@ UserInterface::update(){
 
 void 
 UserInterface::render(){
-  ImGui::Render();
-  ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-  ImGuiIO& io = ImGui::GetIO();
+  ImGui::Render();  // Render ImGui
+  ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());  // Render draw data
+  ImGuiIO& io = ImGui::GetIO(); // Get ImGui IO
   if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
   {
-    ImGui::UpdatePlatformWindows();
-    ImGui::RenderPlatformWindowsDefault();
+    ImGui::UpdatePlatformWindows(); // Update platform windows
+    ImGui::RenderPlatformWindowsDefault();  // Render platform windows
   }
 }
 
 void 
 UserInterface::destroy(){
-  ImGui_ImplDX11_Shutdown();
-  ImGui_ImplWin32_Shutdown();
-  ImGui::DestroyContext();
+  ImGui_ImplDX11_Shutdown();  // Shutdown DX11
+  ImGui_ImplWin32_Shutdown();  // Shutdown Win32
+  ImGui::DestroyContext();  // Destroy ImGui context
 }
 
 void 
 UserInterface::setupStyle(){
 
-  ImGui::StyleColorsClassic();
-  ImGuiStyle& style = ImGui::GetStyle();
-  style.WindowRounding = 5.3f;
-  style.FrameRounding = 4.0f;
-  style.ScrollbarRounding = 5.0f;
-  style.GrabRounding = 3.0f;
-  style.TabRounding = 3.0f;
-  style.WindowPadding = ImVec2(10, 10);
-  style.FramePadding = ImVec2(5, 5);
-  style.ItemSpacing = ImVec2(8, 8);
-  style.ItemInnerSpacing = ImVec2(5, 5);
+  ImGui::StyleColorsClassic();  // Set default style
+  ImGuiStyle& style = ImGui::GetStyle();  // Get ImGui style
+  style.WindowRounding = 5.3f;  // Set window rounding
+  style.FrameRounding = 4.0f; // Set frame rounding
+  style.ScrollbarRounding = 5.0f; // Set scrollbar rounding
+  style.GrabRounding = 3.0f;  // Set grab rounding
+  style.TabRounding = 3.0f; // Set tab rounding
+  style.WindowPadding = ImVec2(10, 10); // Set window padding
+  style.FramePadding = ImVec2(5, 5); // Set frame padding
+  style.ItemSpacing = ImVec2(8, 8); // Set item spacing
+  style.ItemInnerSpacing = ImVec2(5, 5); // Set item inner spacing
 
-  ImVec4 neonPink = ImVec4(1.0f, 0.07f, 0.58f, 1.0f);
-  ImVec4 neonBlue = ImVec4(0.0f, 0.5f, 1.0f, 1.0f);
-  ImVec4 neonGreen = ImVec4(0.0f, 1.0f, 0.5f, 1.0f);
-  ImVec4 backgroundColor = ImVec4(0.05f, 0.05f, 0.1f, 1.0f);
-  ImVec4 activeGlow = ImVec4(1.0f, 1.0f, 0.0f, 1.0f);
+  ImVec4 neonPink = ImVec4(1.0f, 0.07f, 0.58f, 1.0f); // Neon pink color
+  ImVec4 neonBlue = ImVec4(0.0f, 0.5f, 1.0f, 1.0f); // Neon blue color
+  ImVec4 neonGreen = ImVec4(0.0f, 1.0f, 0.5f, 1.0f); // Neon green color
+  ImVec4 backgroundColor = ImVec4(0.05f, 0.05f, 0.1f, 1.0f); // Background color
+  ImVec4 activeGlow = ImVec4(1.0f, 1.0f, 0.0f, 1.0f); // Active glow color
 
-  ImGui::GetStyle().Colors[ImGuiCol_WindowBg] = backgroundColor;
-  ImGui::GetStyle().Colors[ImGuiCol_TitleBgActive] = neonPink;
-  ImGui::GetStyle().Colors[ImGuiCol_TitleBg] = backgroundColor;
-  ImGui::GetStyle().Colors[ImGuiCol_Border] = neonPink;
-  ImGui::GetStyle().Colors[ImGuiCol_FrameBg] = ImVec4(0.2f, 0.2f, 0.24f, 1.0f);
-  ImGui::GetStyle().Colors[ImGuiCol_FrameBgHovered] = neonBlue;
-  ImGui::GetStyle().Colors[ImGuiCol_FrameBgActive] = neonGreen;
-  ImGui::GetStyle().Colors[ImGuiCol_Button] = neonPink;
-  ImGui::GetStyle().Colors[ImGuiCol_ButtonHovered] = neonBlue;
-  ImGui::GetStyle().Colors[ImGuiCol_ButtonActive] = activeGlow;
-  ImGui::GetStyle().Colors[ImGuiCol_Header] = neonGreen;
-  ImGui::GetStyle().Colors[ImGuiCol_HeaderHovered] = neonBlue;
-  ImGui::GetStyle().Colors[ImGuiCol_HeaderActive] = neonPink;
+  ImGui::GetStyle().Colors[ImGuiCol_WindowBg] = backgroundColor;  // Set window background color
+  ImGui::GetStyle().Colors[ImGuiCol_TitleBgActive] = neonPink;  // Set title background active color
+  ImGui::GetStyle().Colors[ImGuiCol_TitleBg] = backgroundColor; // Set title background color
+  ImGui::GetStyle().Colors[ImGuiCol_Border] = neonPink; // Set border color
+  ImGui::GetStyle().Colors[ImGuiCol_FrameBg] = ImVec4(0.2f, 0.2f, 0.24f, 1.0f); // Set frame background color
+  ImGui::GetStyle().Colors[ImGuiCol_FrameBgHovered] = neonBlue; // Set frame background hovered color
+  ImGui::GetStyle().Colors[ImGuiCol_FrameBgActive] = neonGreen; // Set frame background active color
+  ImGui::GetStyle().Colors[ImGuiCol_Button] = neonPink; // Set button color
+  ImGui::GetStyle().Colors[ImGuiCol_ButtonHovered] = neonBlue; // Set button hovered color
+  ImGui::GetStyle().Colors[ImGuiCol_ButtonActive] = activeGlow; // Set button active color
+  ImGui::GetStyle().Colors[ImGuiCol_Header] = neonGreen; // Set header color
+  ImGui::GetStyle().Colors[ImGuiCol_HeaderHovered] = neonBlue; // Set header hovered color
+  ImGui::GetStyle().Colors[ImGuiCol_HeaderActive] = neonPink; // Set header active color
 
-  ImGui::GetStyle().Colors[ImGuiCol_Text] = neonGreen;
+  ImGui::GetStyle().Colors[ImGuiCol_Text] = neonGreen; // Set text color
 
-  ImGui::GetStyle().ScaleAllSizes(1.2f);
+  ImGui::GetStyle().ScaleAllSizes(1.2f); // Scale all sizes
 }
 
 void 
@@ -105,7 +105,7 @@ UserInterface::actorsWindow(std::vector<EngineUtilities::TSharedPointer<Actor>>&
   for (int i = 0; i < (int)actors.size(); ++i) {
     auto& actor = actors[i];
     if (!actor) continue;
-    // "##i" asegura IDs únicos en ImGui
+    // "##i" assures that the label is unique
     std::string label = actor->getName() + "##" + std::to_string(i);
     bool isSelected = (selectedIndex == i);
     if (ImGui::Selectable(label.c_str(), isSelected)) {
@@ -120,17 +120,17 @@ UserInterface::transformWindow(EngineUtilities::TSharedPointer<Actor>& actor){
   ImGui::Begin("Transform", nullptr, ImGuiWindowFlags_NoCollapse);
   if (actor) {
     auto tr = actor->getComponent<Transform>();
-    vec3Control("Position", const_cast<float*>(tr->getPosition().data()));
-    vec3Control("Rotation", const_cast<float*>(tr->getRotation().data()));
-    vec3Control("Scale", const_cast<float*>(tr->getScale().data()));
+    vec3Control("Position", const_cast<float*>(tr->getPosition().data()));  // Get position
+    vec3Control("Rotation", const_cast<float*>(tr->getRotation().data()));  // Get rotation
+    vec3Control("Scale", const_cast<float*>(tr->getScale().data()));  // Get scale
   }
   ImGui::End();
 }
 
 void 
 UserInterface::drawTestDock(){
-  ImGui::Begin("Test Docking", nullptr, ImGuiWindowFlags_NoCollapse);
-  ImGui::Text("Wenas profe");
+  ImGui::Begin("Test Docking", nullptr, ImGuiWindowFlags_NoCollapse); 
+  ImGui::Text("Don't forget to smile <:");
   ImGui::End();
 }
 

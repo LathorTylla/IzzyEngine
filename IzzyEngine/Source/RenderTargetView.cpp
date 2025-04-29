@@ -55,15 +55,17 @@ RenderTargetView::render(DeviceContext& deviceContext,
     ERROR("RenderTargetView", "render", "DeviceContext is nullptr");
     return;
   }
-
+  // Limpiar el render target
   deviceContext.ClearRenderTargetView(m_renderTargetView, 
                                       ClearColor);
 
+  // Establecer el render target
   deviceContext.OMSetRenderTargets(numViews,
                                    &m_renderTargetView,
                                    depthStencilView.m_depthStencilView);
 }
 
 void RenderTargetView::destroy() {
+  // Liberar el render target view
   SAFE_RELEASE(m_renderTargetView);
 }

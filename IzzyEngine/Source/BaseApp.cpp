@@ -109,9 +109,11 @@ BaseApp::init() {
   Texture Iris;
   Iris.init(m_device, "Textures/Iris.png", ExtensionType::PNG);
 
-  m_default.init(m_device, "Textures/Default.png", ExtensionType::PNG);
+  // Load the default texture
+  m_default.init(m_device, "Textures/Default.png", ExtensionType::PNG); 
 
-  m_psyduckTextures.push_back(Body);
+  // Textures for Psyduck
+  m_psyduckTextures.push_back(Body);  
   m_psyduckTextures.push_back(Eyes);
   m_psyduckTextures.push_back(Iris);
   m_psyduckTextures.push_back(m_default);
@@ -129,7 +131,7 @@ BaseApp::init() {
     APsyduck->setMesh(m_device, m_psyduck.meshes);
     // Init Actor Textures
     APsyduck->setTextures(m_psyduckTextures);
-
+    // Init Actor Sampler
     m_actors.push_back(APsyduck);
 
     std::string msg = APsyduck->getName() + " - Actor accessed successfully.";
@@ -144,13 +146,13 @@ BaseApp::init() {
   GokuTexturas.init(m_device, "Textures/GokuTexturas.png", ExtensionType::PNG);
   
   m_objTextures.push_back(GokuTexturas);
-  
+  // Load the default texture
   m_objTextures.push_back(m_default);
 
   // Load Model
   m_objModel.LoadObjModel("Models/goku.obj");
-  AObjModel = EngineUtilities::MakeShared<Actor>(m_device);
-  AObjModel->setName("Goku chiquito");
+  AObjModel = EngineUtilities::MakeShared<Actor>(m_device); //Actor de Goku
+  AObjModel->setName("Goku chiquito");  //Nombre del actor
   if (!AObjModel.isNull()) {
     // Init Actor Transform
     AObjModel->getComponent<Transform>()->setTransform(EngineUtilities::Vector3(3.0f, -2.0f, 2.0f),
@@ -198,11 +200,18 @@ BaseApp::update() {
   InputActionMap(t);
   float FOV = XMConvertToRadians(90.0f);
   m_Projection = XMMatrixPerspectiveFovLH(FOV,
-    m_window.m_width / (float)m_window.m_height,
-    0.01f, 100.0f);
+                                          m_window.m_width / (float)m_window.m_height,
+                                          0.01f, 
+                                          100.0f);
+  // Actualizar la cámara
   updateCamera();
   cbChangesOnResize.mProjection = XMMatrixTranspose(m_Projection);
-  m_changeOnResize.update(m_deviceContext, 0, nullptr, &cbChangesOnResize, 0, 0);
+  m_changeOnResize.update(m_deviceContext, 
+                          0, 
+                          nullptr, 
+                          &cbChangesOnResize,
+                          0, 
+                          0);
 
   // 5) Actualizar todos los actores
   for (auto& actor : m_actors) {
@@ -231,27 +240,26 @@ BaseApp::render() {
 
   // Set Depth Stencil View
   m_depthStencilView.render(m_deviceContext);
-
-  
+  // Set Shader Program
   m_shaderProgram.render(m_deviceContext);
-
+  // Render the objects
   APsyduck->render(m_deviceContext);
-
+  // Render the objects
   AObjModel->render(m_deviceContext);
 
   m_neverChanges.render(m_deviceContext, 0, 1);
   m_changeOnResize.render(m_deviceContext, 1, 1);
  // m_changeEveryFrame.render(m_deviceContext, 2, 1);
-
-
+  // Render the user interface
   m_userInterface.render();
-
+  // Present the back buffer to the screen
   m_swapchain.present();
 }
 
 void
 BaseApp::destroy() {
 
+  // Destroy the swapchain
   if (m_deviceContext.m_deviceContext) m_deviceContext.m_deviceContext->ClearState();
 
   // Destroy the user interface
@@ -262,7 +270,7 @@ BaseApp::destroy() {
   m_changeEveryFrame.destroy();
   m_shaderProgram.destroy();
 
-
+  // Destroy all actors
   m_depthStencil.destroy();
   m_depthStencilView.destroy();
   m_renderTargetView.destroy();
@@ -317,14 +325,14 @@ BaseApp::InputActionMap(float deltaTime) {
 
 void 
 BaseApp::updateCamera() {
-  XMVECTOR position = XMLoadFloat3(&m_camera.pos);
-  XMVECTOR dir = XMLoadFloat3(&m_camera.forward);
-  XMVECTOR up = XMLoadFloat3(&m_camera.up);
+  XMVECTOR position = XMLoadFloat3(&m_camera.pos);  //posición de la cámara
+  XMVECTOR dir = XMLoadFloat3(&m_camera.forward); //dirección de la cámara
+  XMVECTOR up = XMLoadFloat3(&m_camera.up); //vector up de la cámara
 
-  m_View = XMMatrixLookAtLH(position,position+ dir, up);
+  m_View = XMMatrixLookAtLH(position, position + dir, up); //matriz de vista de la cámara
 
-  cbNeverChanges.mView = XMMatrixTranspose(m_View);
-  m_neverChanges.update(m_deviceContext, 0, nullptr, &cbNeverChanges, 0, 0);
+  cbNeverChanges.mView = XMMatrixTranspose(m_View); //matriz de vista
+  m_neverChanges.update(m_deviceContext, 0, nullptr, &cbNeverChanges, 0, 0);  //actualiza la matriz de vista
 }
 
 void

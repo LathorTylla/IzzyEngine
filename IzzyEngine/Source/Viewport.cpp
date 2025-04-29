@@ -12,12 +12,12 @@ Viewport::init(const Window& window){
     ERROR("Viewport", "init", "Invalid Window dimensions (width or height is zero)");
     return E_INVALIDARG;
   }
-  m_viewport.Width = static_cast<float>(window.m_width);
-  m_viewport.Height = static_cast<float>(window.m_height);
-  m_viewport.MinDepth = 0.0f;
-  m_viewport.MaxDepth = 1.0f;
-  m_viewport.TopLeftX = 0;
-  m_viewport.TopLeftY = 0;
+  m_viewport.Width = static_cast<float>(window.m_width);  // Set the width of the viewport
+  m_viewport.Height = static_cast<float>(window.m_height);  // Set the height of the viewport
+  m_viewport.MinDepth = 0.0f; // Set the minimum depth of the viewport
+  m_viewport.MaxDepth = 1.0f; // Set the maximum depth of the viewport
+  m_viewport.TopLeftX = 0;  // Set the top left X coordinate of the viewport
+  m_viewport.TopLeftY = 0;  // Set the top left Y coordinate of the viewport
   return S_OK;
 }
 
@@ -28,12 +28,12 @@ Viewport::init(unsigned int width,
     ERROR("Viewport", "init", "Invalid dimensions (width or height is zero)");
     return E_INVALIDARG;
   }
-  m_viewport.Width = static_cast<float>(width);
-  m_viewport.Height = static_cast<float>(height);
-  m_viewport.MinDepth = 0.0f;
-  m_viewport.MaxDepth = 1.0f;
-  m_viewport.TopLeftX = 0;
-  m_viewport.TopLeftY = 0;
+  m_viewport.Width = static_cast<float>(width); // Set the width of the viewport
+  m_viewport.Height = static_cast<float>(height); // Set the height of the viewport
+  m_viewport.MinDepth = 0.0f; // Set the minimum depth of the viewport
+  m_viewport.MaxDepth = 1.0f; // Set the maximum depth of the viewport
+  m_viewport.TopLeftX = 0;  // Set the top left X coordinate of the viewport
+  m_viewport.TopLeftY = 0;  // Set the top left Y coordinate of the viewport
   return S_OK;
 }
 
@@ -48,7 +48,7 @@ Viewport::render(DeviceContext& deviceContext){
     ERROR("Viewport", "render", "Invalid Device Context (m_deviceContext is nullptr)");
     return;
   }
-  deviceContext.RSSetViewports(1, &m_viewport);
+  deviceContext.RSSetViewports(1, &m_viewport); // Set the viewport
   
 }
 

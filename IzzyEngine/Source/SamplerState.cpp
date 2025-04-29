@@ -9,16 +9,17 @@
      return E_POINTER;
    }
  
-   D3D11_SAMPLER_DESC sampDesc = {};
-   sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-   sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-   sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-   sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-   sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
-   sampDesc.MinLOD = 0;
-   sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
+   // Check if the sampler state is already created
+   D3D11_SAMPLER_DESC sampDesc = {};  // Initialize the sampler description
+   sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;// Linear filter
+   sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;  // Wrap address mode
+   sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;  
+   sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;  
+   sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;  
+   sampDesc.MinLOD = 0; // Minimum LOD
+   sampDesc.MaxLOD = D3D11_FLOAT32_MAX; // Maximum LOD
  
-   HRESULT hr = device.CreateSamplerState(&sampDesc, &m_sampler);
+   HRESULT hr = device.CreateSamplerState(&sampDesc, &m_sampler); // Create the sampler state
    if (FAILED(hr)) {
      ERROR("SamplerState", "init", "Failed to create SamplerState");
      return hr;
@@ -41,12 +42,12 @@
      return;
    }
  
-   deviceContext.PSSetSamplers(StartSlot, NumSamplers, &m_sampler);
+   deviceContext.PSSetSamplers(StartSlot, NumSamplers, &m_sampler); // Set the sampler state
  }
  
  void 
  SamplerState::destroy() {
    if (m_sampler) {
-     SAFE_RELEASE(m_sampler);
+     SAFE_RELEASE(m_sampler); // Release the sampler state
    }
  }

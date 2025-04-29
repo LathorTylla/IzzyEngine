@@ -51,13 +51,28 @@ public:
   void 
   setupStyle();
 
+  /*
+  * @brief Crea una ventana de actores.
+  * param actors: Vector de punteros compartidos a actores.
+  * param selectedIndex: Índice del actor seleccionado.
+  * 
+  * Esta función crea una ventana que muestra una lista de actores y permite seleccionar uno de ellos.
+  * La ventana se actualiza automáticamente para reflejar los cambios en la lista de actores.
+  */
   void 
   actorsWindow(std::vector<EngineUtilities::TSharedPointer<Actor>>& actors, 
                int& selectedIndex);
 
+  /*
+  * @brief Crea una ventana de transformaciones.
+  * param actor: Puntero compartido al actor seleccionado.
+  */
   void 
   transformWindow(EngineUtilities::TSharedPointer<Actor>& actor);
 
+  /*
+  * @brief Crea una ventana de prueba.
+  */
   void 
   drawTestDock();
 

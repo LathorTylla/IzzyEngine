@@ -1,8 +1,16 @@
 #pragma once
 #include "Prerequisites.h"
 #include "Component.h"
+
 class DeviceContext;
 
+/**
+ * @class Component
+ * @brief Clase base para todos los componentes del sistema ECS.
+ *
+ * Esta clase define la interfaz básica para los componentes que pueden ser añadidos a los actores.
+ * Los componentes pueden ser de diferentes tipos y deben implementar métodos para actualizar y renderizar.
+ */
 class
 Component {
 public:
@@ -45,5 +53,5 @@ public:
     getType() const { return m_type; }
 
 protected:
-  ComponentType m_type; ///< Tipo del componente.
+  ComponentType m_type; // Tipo del componente.
 };

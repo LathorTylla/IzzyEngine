@@ -2,6 +2,7 @@
 #include "MeshComponent.h"
 #include "Device.h"
 
+
 Actor::Actor(Device& device) {
   // Componentes por defecto
   EngineUtilities::TSharedPointer<Transform> transform = EngineUtilities::MakeShared<Transform>();
@@ -9,14 +10,17 @@ Actor::Actor(Device& device) {
   EngineUtilities::TSharedPointer<MeshComponent> mesh = EngineUtilities::MakeShared<MeshComponent>();
   addComponent(mesh);
 
+  // Inicializar el actor
   HRESULT hr;
   std::string classNameType = "Actor -> " + m_name;
+
+  // Initialize the model buffer
 
   hr = m_modelBuffer.init(device, sizeof(CBChangesEveryFrame));
   if (FAILED(hr)) {
     ERROR("Actor", classNameType.c_str(), "Failed to create new CBChangesEveryFrame");
   }
-
+  // Initialize the model buffer with default values
   hr = m_sampler.init(device);
   if (FAILED(hr)) {
     ERROR("Actor", classNameType.c_str(), "Failed to create new SamplerState");
@@ -38,7 +42,9 @@ Actor::update(float deltaTime, DeviceContext& deviceContext) {
   // Update Transform Component
   getComponent<Transform>()->update(deltaTime);
 
+  // Update Mesh Component
   m_model.mWorld = XMMatrixTranspose(getComponent<Transform>()->matrix);
+  // Update the model matrix in the constant buffer
   m_model.vMeshColor = XMFLOAT4(0.7f, 0.7f, 0.7f, 1.0f);
 
   // Update attributes
@@ -48,9 +54,7 @@ Actor::update(float deltaTime, DeviceContext& deviceContext) {
 
 void
 Actor::render(DeviceContext& deviceContext) {
-  // Render Rasterizer, Sampler and Blendstate one per time when updating the mesh
-  //m_rasterizer.render(deviceContext);
-  //m_blendstate.render(deviceContext);
+
   m_sampler.render(deviceContext, 0, 1);
 
   // Update buffers for each individual mesh on the actor
@@ -67,7 +71,6 @@ Actor::render(DeviceContext& deviceContext) {
       else {
         //std::string msg = std::to_string(i) + " NO tiene textura asignada.";
         //MESSAGE("Actor", "render", msg.c_str());
-        // Aquí puedes asignar una textura por defecto o manejar el caso de forma adecuada.
       }
     }
 
@@ -80,35 +83,37 @@ Actor::render(DeviceContext& deviceContext) {
 
 void
 Actor::destroy() {
+  // Destroy all buffers and textures
   for (auto& vertexBuffer : m_vertexBuffers) {
     vertexBuffer.destroy();
   }
-
+  // Destroy all index buffers
   for (auto& indexBuffer : m_indexBuffers) {
     indexBuffer.destroy();
   }
-
+  // Destroy all textures
   for (auto& tex : m_textures) {
     tex.destroy();
   }
   m_modelBuffer.destroy();
 
-  //m_rasterizer.destroy();
-  //m_blendstate.destroy();
   m_sampler.destroy();
 }
 
 void
 Actor::setMesh(Device& device, std::vector<MeshComponent> meshes) {
-  m_meshes = meshes;
-  HRESULT hr;
+  m_meshes = meshes;  // Asignar los meshes al actor
+  HRESULT hr;         // Inicializar el resultado de HRESULT
+  // Limpiar los buffers de vértices e índices
   for (auto& mesh : m_meshes) {
     // Crear vertex buffer
     Buffer vertexBuffer;
     hr = vertexBuffer.init(device, mesh, D3D11_BIND_VERTEX_BUFFER);
+    // Comprobar si se ha creado correctamente
     if (FAILED(hr)) {
       ERROR("Actor", "setMesh", "Failed to create new vertexBuffer");
     }
+    // Comprobar si el buffer de vértices ya existe
     else {
       m_vertexBuffers.push_back(vertexBuffer);
     }
@@ -119,6 +124,7 @@ Actor::setMesh(Device& device, std::vector<MeshComponent> meshes) {
     if (FAILED(hr)) {
       ERROR("Actor", "setMesh", "Failed to create new indexBuffer");
     }
+    // Comprobar si el buffer de índices ya existe
     else {
       m_indexBuffers.push_back(indexBuffer);
     }

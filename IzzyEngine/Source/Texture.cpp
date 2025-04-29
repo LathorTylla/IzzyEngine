@@ -41,15 +41,15 @@ Texture::init(Device device,
         ("Failed to load PNG texture: " + std::string(stbi_failure_reason())).c_str());
       return E_FAIL;
     }
-    D3D11_TEXTURE2D_DESC textureDesc = {};
-    textureDesc.Width = width;
-    textureDesc.Height = height;
-    textureDesc.MipLevels = 1;
-    textureDesc.ArraySize = 1;
-    textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    textureDesc.SampleDesc.Count = 1;
-    textureDesc.Usage = D3D11_USAGE_DEFAULT;
-    textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+    D3D11_TEXTURE2D_DESC textureDesc = {};  //Inicializar la descripción de la textura
+    textureDesc.Width = width;  // Ancho de la textura
+    textureDesc.Height = height;  // Alto de la textura
+    textureDesc.MipLevels = 1;  // Número de niveles de mipmap
+    textureDesc.ArraySize = 1;  // Tamaño de la textura
+    textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;  // Formato de la textura
+    textureDesc.SampleDesc.Count = 1;  // Número de muestras por pixel
+    textureDesc.Usage = D3D11_USAGE_DEFAULT;  // Uso de la textura
+    textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;  // Bandera de enlace
 
     D3D11_SUBRESOURCE_DATA initData = {};
     initData.pSysMem = data;
@@ -100,17 +100,17 @@ Texture::init(Device device,
   }
   HRESULT hr = S_OK;
   // Configuración de la textura
-  D3D11_TEXTURE2D_DESC desc = {};
-  desc.Width = width;
-  desc.Height = height;
-  desc.MipLevels = 1;
-  desc.ArraySize = 1;
-  desc.Format = format;
-  desc.SampleDesc.Count = sampleCount;
-  desc.SampleDesc.Quality = qualityLevels;
-  desc.Usage = D3D11_USAGE_DEFAULT;
-  desc.BindFlags = bindFlags;
-  hr = device.CreateTexture2D(&desc, nullptr, &m_texture);
+  D3D11_TEXTURE2D_DESC desc = {}; // Inicializar la descripción de la textura
+  desc.Width = width; // Ancho de la textura
+  desc.Height = height; // Alto de la textura
+  desc.MipLevels = 1; // Número de niveles de mipmap
+  desc.ArraySize = 1; // Tamaño de la textura
+  desc.Format = format; // Formato de la textura
+  desc.SampleDesc.Count = sampleCount; // Número de muestras por pixel
+  desc.SampleDesc.Quality = qualityLevels; // Calidad de la textura
+  desc.Usage = D3D11_USAGE_DEFAULT; // Uso de la textura
+  desc.BindFlags = bindFlags; // Bandera de enlace
+  hr = device.CreateTexture2D(&desc, nullptr, &m_texture);  // Crear la textura
   if (FAILED(hr)) {
     ERROR("Texture", "init", "Failed to create texture with the specified parameters");
     return hr;

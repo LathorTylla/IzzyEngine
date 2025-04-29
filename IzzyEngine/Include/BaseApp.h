@@ -117,6 +117,11 @@ public:
  	std::vector<Texture>					 m_psyduckTextures;
  	Texture                        m_default;
 
+  //Modelos FBX
+  ModelLoader                    m_warlock;
+  EngineUtilities::TSharedPointer<Actor> AWarlock;
+  std::vector<Texture>					 m_warlockTextures;
+
   //Modelos OBJ
   ModelLoader                    m_objModel;
   EngineUtilities::TSharedPointer<Actor> AObjModel;

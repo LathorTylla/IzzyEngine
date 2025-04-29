@@ -141,6 +141,29 @@ BaseApp::init() {
     MESSAGE("Actor", "Actor", "Actor resource not found.");
   }
 
+  //Load Textures Warlock
+  Texture WarlockBody;
+  WarlockBody.init(m_device, "Textures/WarlockBody.png", ExtensionType::PNG);
+  m_warlockTextures.push_back(WarlockBody);
+  m_warlockTextures.push_back(m_default); // Default texture
+
+  //Load Model Warlock
+  m_warlock.LoadFBXModel("Models/Warlock.FBX");
+  AWarlock = EngineUtilities::MakeShared<Actor>(m_device);
+  AWarlock = EngineUtilities::MakeShared<Actor>(m_device);
+  if (!AWarlock.isNull()) {
+    AWarlock->setName("Warlock"); // Asignar nombre visible en ImGui
+    AWarlock->getComponent<Transform>()->setTransform(
+      { 12.0f, -5.0f, 25.0f },   // Posición diferente para no chocar
+      { 0.0f, 3.4f, 1.5f },     // Rotación inicial
+      { 2.00f, 2.00f, 2.00f }   // Escala pequeña si el modelo es grande
+    );
+    AWarlock->setMesh(m_device, m_warlock.meshes);
+    AWarlock->setTextures(m_warlockTextures);
+
+    m_actors.push_back(AWarlock);
+  }
+
   // Load the Texture
   Texture GokuTexturas;
   GokuTexturas.init(m_device, "Textures/GokuTexturas.png", ExtensionType::PNG);
@@ -242,6 +265,9 @@ BaseApp::render() {
   m_depthStencilView.render(m_deviceContext);
   // Set Shader Program
   m_shaderProgram.render(m_deviceContext);
+
+  // Render the objects
+  AWarlock->render(m_deviceContext);
   // Render the objects
   APsyduck->render(m_deviceContext);
   // Render the objects

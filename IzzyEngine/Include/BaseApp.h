@@ -122,6 +122,10 @@ public:
   EngineUtilities::TSharedPointer<Actor> AObjModel;
   std::vector<Texture>								m_objTextures;
 
+  //Actores
+  std::vector<EngineUtilities::TSharedPointer<Actor>> m_actors;  // contenedor de todos los actores
+  int selectedActorIndex = 0; // índice del actor seleccionado
+
 
   bool keys[256] = { false }; // Arreglo de teclas para manejar los inputs de teclado
   bool mouseLeftDown = false; // Variable para manejar el clic izquierdo del mouse

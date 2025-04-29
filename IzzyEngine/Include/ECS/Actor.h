@@ -51,13 +51,13 @@ public:
    * @param deviceContext Contexto del dispositivo para operaciones gráficas.
    */
   void
-    render(DeviceContext& deviceContext) override;
+  render(DeviceContext& deviceContext) override;
 
   /**
    * @brief Destruye el actor y libera los recursos asociados.
    */
   void
-    destroy();
+  destroy();
 
   /**
    * @brief Establece las mallas del actor.
@@ -65,14 +65,14 @@ public:
    * @param meshes Vector de componentes de malla que se van a establecer.
    */
   void
-    setMesh(Device& device, std::vector<MeshComponent> meshes);
+  setMesh(Device& device, std::vector<MeshComponent> meshes);
 
   /**
    * @brief Establece las texturas del actor.
    * @param textures Vector de texturas que se van a establecer.
    */
   void
-    setTextures(std::vector<Texture> textures) {
+  setTextures(std::vector<Texture> textures) {
     m_textures = textures;
   }
 
@@ -81,8 +81,16 @@ public:
    * @return El nombre del actor.
    */
   std::string
-    getName() {
+  getName() {
     return m_name;
+  }
+
+  /*
+  * @brief Establece el nombre del actor.
+  * @param name El nuevo nombre del actor.
+  */
+  void setName(std::string name) {
+    m_name = name;
   }
 
   /**

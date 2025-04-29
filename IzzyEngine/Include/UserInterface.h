@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Prerequisites.h"
+#include "ECS/Actor.h"
+#include "ECS/Transform.h"
 
 /* 
  * @brief UserInterface.
@@ -48,6 +50,17 @@ public:
    */
   void 
   setupStyle();
+
+  void 
+  actorsWindow(std::vector<EngineUtilities::TSharedPointer<Actor>>& actors, 
+               int& selectedIndex);
+
+  void 
+  transformWindow(EngineUtilities::TSharedPointer<Actor>& actor);
+
+  void 
+  drawTestDock();
+
 
   /*
    * @brief Crea un botón en la interfaz de usuario.

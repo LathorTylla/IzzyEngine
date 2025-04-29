@@ -119,6 +119,7 @@ BaseApp::init() {
   // Load Model
   m_psyduck.LoadFBXModel("Models/Psyduck.FBX");
   APsyduck = EngineUtilities::MakeShared<Actor>(m_device);
+  APsyduck->setName("Psyduck");
   if (!APsyduck.isNull()) {
     // Init Actor Transform
     APsyduck->getComponent<Transform>()->setTransform(EngineUtilities::Vector3(-0.9f, -2.0f, 2.0f),
@@ -128,6 +129,8 @@ BaseApp::init() {
     APsyduck->setMesh(m_device, m_psyduck.meshes);
     // Init Actor Textures
     APsyduck->setTextures(m_psyduckTextures);
+
+    m_actors.push_back(APsyduck);
 
     std::string msg = APsyduck->getName() + " - Actor accessed successfully.";
     MESSAGE("Actor", "Actor", msg.c_str());
@@ -147,6 +150,7 @@ BaseApp::init() {
   // Load Model
   m_objModel.LoadObjModel("Models/goku.obj");
   AObjModel = EngineUtilities::MakeShared<Actor>(m_device);
+  AObjModel->setName("Goku chiquito");
   if (!AObjModel.isNull()) {
     // Init Actor Transform
     AObjModel->getComponent<Transform>()->setTransform(EngineUtilities::Vector3(3.0f, -2.0f, 2.0f),
@@ -156,6 +160,8 @@ BaseApp::init() {
     AObjModel->setMesh(m_device, m_objModel.meshes);
     // Init Actor Textures
     AObjModel->setTextures(m_objTextures);
+
+    m_actors.push_back(AObjModel);
 
     std::string msg = AObjModel->getName() + " - Actor accessed successfully.";
     MESSAGE("Actor", "Actor", msg.c_str());
@@ -169,59 +175,42 @@ BaseApp::init() {
 
 void
 BaseApp::update() {
-
-  // Actualizar la interfaz de usuario
+  // 1) Nueva frame de ImGui
   m_userInterface.update();
 
-  // ventana de transform
-  ImGui::Begin("Transform", nullptr, ImGuiWindowFlags_NoCollapse);
+  // 2) Panel de selección de actores
+  m_userInterface.actorsWindow(m_actors, selectedActorIndex);
 
+  // 3) Ventana de prueba de docking
+  m_userInterface.drawTestDock();
 
-  ImGui::End();
-
-  //Ventana de prueba docking
-  ImGui::Begin("Test Docking", nullptr, ImGuiWindowFlags_NoCollapse);
-  //Ventana de texto
-  ImGui::Text("Wenas profe");
-  ImGui::End();
-  // Actualizar tiempo y rotación
+  // 4) Actualizar tiempo y cámara 
   static float t = 0.0f;
   if (m_swapchain.m_driverType == D3D_DRIVER_TYPE_REFERENCE) {
-    t += (float)XM_PI * 0.0125f;
+    t += XM_PI * 0.0125f;
   }
   else {
-    // Actualizar el tiempo
-    static DWORD dwTimeStart = 0;
-    DWORD dwTimeCur = GetTickCount();
-    if (dwTimeStart == 0)
-      dwTimeStart = dwTimeCur;
-    t = (dwTimeCur - dwTimeStart) / 1000.0f;
+    static DWORD start = 0;
+    DWORD now = GetTickCount();
+    if (!start) start = now;
+    t = (now - start) / 1000.0f;
   }
-
-  // Actualizar la rotación del objeto
   InputActionMap(t);
-
   float FOV = XMConvertToRadians(90.0f);
-  m_Projection = XMMatrixPerspectiveFovLH(FOV, m_window.m_width / (float)m_window.m_height, 0.01f, 100.0f);
+  m_Projection = XMMatrixPerspectiveFovLH(FOV,
+    m_window.m_width / (float)m_window.m_height,
+    0.01f, 100.0f);
   updateCamera();
-
-  // Actualizar la proyección en el buffer constante
   cbChangesOnResize.mProjection = XMMatrixTranspose(m_Projection);
   m_changeOnResize.update(m_deviceContext, 0, nullptr, &cbChangesOnResize, 0, 0);
 
-  // Actualizar info logica del mesh
-  APsyduck->update(0, m_deviceContext);
-  // Actualizar info logica del mesh
-  AObjModel->update(0, m_deviceContext);
+  // 5) Actualizar todos los actores
+  for (auto& actor : m_actors) {
+    if (actor) actor->update(t, m_deviceContext);
+  }
 
-  ImGui::Begin("Transform");
-
-  // Draw the structure
-  m_userInterface.vec3Control("Position", const_cast<float*>(AObjModel->getComponent<Transform>()->getPosition().data()));
-  m_userInterface.vec3Control("Rotation", const_cast<float*>(AObjModel->getComponent<Transform>()->getRotation().data()));
-  m_userInterface.vec3Control("Scale", const_cast<float*>(AObjModel->getComponent<Transform>()->getScale().data()));
-
-  ImGui::End();
+  // 6) Panel de Transform para el actor seleccionado
+  m_userInterface.transformWindow(m_actors[selectedActorIndex]);
 }
 
 void

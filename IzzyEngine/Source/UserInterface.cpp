@@ -1,4 +1,5 @@
 #include "UserInterface.h"
+#include "Prerequisites.h"
 
 UserInterface::UserInterface() {
 }
@@ -95,6 +96,42 @@ UserInterface::setupStyle(){
   ImGui::GetStyle().Colors[ImGuiCol_Text] = neonGreen;
 
   ImGui::GetStyle().ScaleAllSizes(1.2f);
+}
+
+void 
+UserInterface::actorsWindow(std::vector<EngineUtilities::TSharedPointer<Actor>>& actors, 
+                            int& selectedIndex){
+  ImGui::Begin("Actors");
+  for (int i = 0; i < (int)actors.size(); ++i) {
+    auto& actor = actors[i];
+    if (!actor) continue;
+    // "##i" asegura IDs únicos en ImGui
+    std::string label = actor->getName() + "##" + std::to_string(i);
+    bool isSelected = (selectedIndex == i);
+    if (ImGui::Selectable(label.c_str(), isSelected)) {
+      selectedIndex = i;
+    }
+  }
+  ImGui::End();
+}
+
+void 
+UserInterface::transformWindow(EngineUtilities::TSharedPointer<Actor>& actor){
+  ImGui::Begin("Transform", nullptr, ImGuiWindowFlags_NoCollapse);
+  if (actor) {
+    auto tr = actor->getComponent<Transform>();
+    vec3Control("Position", const_cast<float*>(tr->getPosition().data()));
+    vec3Control("Rotation", const_cast<float*>(tr->getRotation().data()));
+    vec3Control("Scale", const_cast<float*>(tr->getScale().data()));
+  }
+  ImGui::End();
+}
+
+void 
+UserInterface::drawTestDock(){
+  ImGui::Begin("Test Docking", nullptr, ImGuiWindowFlags_NoCollapse);
+  ImGui::Text("Wenas profe");
+  ImGui::End();
 }
 
 void 

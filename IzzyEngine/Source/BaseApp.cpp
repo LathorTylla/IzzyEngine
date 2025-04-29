@@ -153,11 +153,9 @@ BaseApp::init() {
   AWarlock = EngineUtilities::MakeShared<Actor>(m_device);
   if (!AWarlock.isNull()) {
     AWarlock->setName("Warlock"); // Asignar nombre visible en ImGui
-    AWarlock->getComponent<Transform>()->setTransform(
-      { 12.0f, -5.0f, 25.0f },   // Posición diferente para no chocar
-      { 0.0f, 3.4f, 1.5f },     // Rotación inicial
-      { 2.00f, 2.00f, 2.00f }   // Escala pequeña si el modelo es grande
-    );
+    AWarlock->getComponent<Transform>()->setTransform(EngineUtilities::Vector3(12.0f, -5.0f, 26.0f),
+                                                      EngineUtilities::Vector3(XM_PI / 0.01f, 3.4f, XM_PI / 1.5f),
+                                                      EngineUtilities::Vector3(2.00f, 2.00f, 2.00f));
     AWarlock->setMesh(m_device, m_warlock.meshes);
     AWarlock->setTextures(m_warlockTextures);
 

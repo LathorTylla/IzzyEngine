@@ -15,17 +15,17 @@ ShaderProgram::init(Device& device,
 		return E_INVALIDARG;
 	}
 
-	m_shaderFileName = fileName;
+  m_shaderFileName = fileName;	//	Safe the shader file name
 
-	// Crear el Vertex Shader
+	// Create the Vertex Shader
 	HRESULT hr = CreateShader(device, ShaderType::VERTEX_SHADER);
 	if (FAILED(hr)) return hr;
 
-	// Crear el Input Layout
+	// Create the Input Layout
 	hr = CreateInputLayout(device, Layout);
 	if (FAILED(hr)) return hr;
 
-	// Crear el Pixel Shader
+	// Create the Pixel Shader
 	hr = CreateShader(device, ShaderType::PIXEL_SHADER);
 	return hr;
 }
@@ -41,18 +41,18 @@ ShaderProgram::render(DeviceContext& deviceContext) {
 		return;
 	}
 
-	m_inputLayout.render(deviceContext);
-	deviceContext.VSSetShader(m_VertexShader, nullptr, 0);
-	deviceContext.PSSetShader(m_PixelShader, nullptr, 0);
+  m_inputLayout.render(deviceContext);	// Set the input layout
+  deviceContext.VSSetShader(m_VertexShader, nullptr, 0);	// Set the vertex shader
+	deviceContext.PSSetShader(m_PixelShader, nullptr, 0);	//Set the pixel shader
 }
 
 void
 ShaderProgram::destroy() {
-	SAFE_RELEASE(m_VertexShader);
-	m_inputLayout.destroy();
-	SAFE_RELEASE(m_PixelShader);
-	SAFE_RELEASE(m_vertexShaderData);
-	SAFE_RELEASE(m_pixelShaderData);
+  SAFE_RELEASE(m_VertexShader);	// Release the vertex shader
+  m_inputLayout.destroy();  // Release the input layout
+  SAFE_RELEASE(m_PixelShader); // Release the pixel shader
+  SAFE_RELEASE(m_vertexShaderData);	// Release the vertex shader data
+  SAFE_RELEASE(m_pixelShaderData);	// Release the pixel shader data
 }
 
 HRESULT
@@ -63,7 +63,7 @@ ShaderProgram::CreateInputLayout(Device& device,
 		return E_POINTER;
 	}
 
-	HRESULT hr = m_inputLayout.init(device, Layout, m_vertexShaderData);
+  HRESULT hr = m_inputLayout.init(device, Layout, m_vertexShaderData);	// Create the input layout
 	SAFE_RELEASE(m_vertexShaderData);
 
 	if (FAILED(hr)) {
@@ -76,16 +76,16 @@ ShaderProgram::CreateInputLayout(Device& device,
 HRESULT
 ShaderProgram::CreateShader(Device& device, 
 														ShaderType type) {
-	HRESULT hr = S_OK;
+  HRESULT hr = S_OK;	// Check if the device is valid
 	ID3DBlob* shaderData = nullptr;
-	const char* shaderEntryPoint = (type == PIXEL_SHADER) ? "PS" : "VS";
-	const char* shaderModel = (type == PIXEL_SHADER) ? "ps_4_0" : "vs_4_0";
+  const char* shaderEntryPoint = (type == PIXEL_SHADER) ? "PS" : "VS";	// Entry point for the shader
+  const char* shaderModel = (type == PIXEL_SHADER) ? "ps_4_0" : "vs_4_0";	// Shader model
 
 	// Compilar el Shader
 	hr = CompileShaderFromFile(m_shaderFileName.data(),
-		shaderEntryPoint,
-		shaderModel,
-		&shaderData);
+														 shaderEntryPoint,
+														 shaderModel,
+														 &shaderData);
 	if (FAILED(hr)) {
 		ERROR("ShaderProgram", "CreateShader", "Failed to compile shader");
 		return hr;
@@ -94,15 +94,15 @@ ShaderProgram::CreateShader(Device& device,
 	// Crear el shader
 	if (type == PIXEL_SHADER) {
 		hr = device.CreatePixelShader(shaderData->GetBufferPointer(),
-			shaderData->GetBufferSize(),
-			nullptr,
-			&m_PixelShader);
+																	shaderData->GetBufferSize(),
+																	nullptr,
+																	&m_PixelShader);
 	}
 	else {
 		hr = device.CreateVertexShader(shaderData->GetBufferPointer(),
-			shaderData->GetBufferSize(),
-			nullptr,
-			&m_VertexShader);
+																	 shaderData->GetBufferSize(),
+																	 nullptr,
+																	 &m_VertexShader);
 	}
 
 	if (FAILED(hr)) {

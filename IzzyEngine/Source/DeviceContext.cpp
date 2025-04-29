@@ -13,6 +13,7 @@ DeviceContext::RSSetViewports(unsigned int NumViewports,
 		return;
 	}
 
+  // Validar el número de viewports
 	m_deviceContext->RSSetViewports(NumViewports, 
 																	pViewports);
 }
@@ -25,7 +26,7 @@ DeviceContext::PSSetShaderResources(unsigned int StartSlot,
 		ERROR("DeviceContext", "PSSetShaderResources", "ppShaderResourceViews is nullptr");
 		return;
 	}
-
+  // Validar el número de views
 	m_deviceContext->PSSetShaderResources(StartSlot, 
 																				NumViews, 
 																				ppShaderResourceViews);
@@ -37,7 +38,7 @@ DeviceContext::IASetInputLayout(ID3D11InputLayout* pInputLayout) {
 		ERROR("DeviceContext", "IASetInputLayout", "pInputLayout is nullptr");
 		return;
 	}
-
+  // Validar el layout de entrada
 	m_deviceContext->IASetInputLayout(pInputLayout);
 }
 
@@ -49,7 +50,7 @@ DeviceContext::VSSetShader(ID3D11VertexShader* pVertexShader,
 		ERROR("DeviceContext", "VSSetShader", "pVertexShader is nullptr");
 		return;
 	}
-
+  // Validar el vertex shader
 	m_deviceContext->VSSetShader(pVertexShader, 
 															 ppClassInstances, 
 															 NumClassInstances);
@@ -62,7 +63,7 @@ DeviceContext::PSSetShader(ID3D11PixelShader* pPixelShader,
 		ERROR("DeviceContext", "PSSetShader", "pPixelShader is nullptr");
 		return;
 	}
-
+  // Validar el pixel shader
 	m_deviceContext->PSSetShader(pPixelShader, 
 															 ppClassInstances, 
 															 NumClassInstances);
@@ -79,6 +80,7 @@ DeviceContext::UpdateSubresource(ID3D11Resource* pDstResource,
 			    "Invalid arguments: pDstResource or pSrcData is nullptr");
 		return;
 	}
+  // Validar el recurso de destino
 	m_deviceContext->UpdateSubresource(pDstResource,
 																		 DstSubresource,
 																		 pDstBox,
@@ -98,6 +100,7 @@ DeviceContext::IASetVertexBuffers(unsigned int StartSlot,
 			    "Invalid arguments: ppVertexBuffers, pStrides, or pOffsets is nullptr");
 		return;
 	}
+  // Validar los buffers de vértices
 	m_deviceContext->IASetVertexBuffers(StartSlot,
 																			NumBuffers,
 																			ppVertexBuffers,
@@ -114,6 +117,7 @@ DeviceContext::IASetIndexBuffer(ID3D11Buffer* pIndexBuffer,
 		return;
 	}
 
+  // Validar el formato
 	m_deviceContext->IASetIndexBuffer(pIndexBuffer, 
 																		Format, 
 																		Offset);
@@ -127,7 +131,7 @@ DeviceContext::PSSetSamplers(unsigned int StartSlot,
 		ERROR("DeviceContext", "PSSetSamplers", "ppSamplers is nullptr");
 		return;
 	}
-
+  // Validar los samplers
 	m_deviceContext->PSSetSamplers(StartSlot, 
 																 NumSamplers, 
 																 ppSamplers);
@@ -139,8 +143,10 @@ DeviceContext::RSSetState(ID3D11RasterizerState* pRasterizerState) {
 		ERROR("DeviceContext", "RSSetState", "pRasterizerState is nullptr");
 		return;
 	}
+  // Validar el estado del rasterizador
 	m_deviceContext->RSSetState(pRasterizerState);
 }
+
 void
 DeviceContext::OMSetBlendState(ID3D11BlendState* pBlendState,
 															 const float BlendFactor[4],
@@ -149,7 +155,7 @@ DeviceContext::OMSetBlendState(ID3D11BlendState* pBlendState,
 		ERROR("DeviceContext", "OMSetBlendState", "pBlendState is nullptr");
 		return;
 	}
-
+  // Validar el BlendState
 	m_deviceContext->OMSetBlendState(pBlendState, 
 																	 BlendFactor, 
 																	 SampleMask);
@@ -169,7 +175,7 @@ DeviceContext::OMSetRenderTargets(unsigned int NumViews,
 			    "ppRenderTargetViews is nullptr, but NumViews > 0");
 		return;
 	}
-	
+  // Validar el número de views
 	m_deviceContext->OMSetRenderTargets(NumViews, 
 																			ppRenderTargetViews, 
 																			pDepthStencilView);
@@ -182,7 +188,7 @@ DeviceContext::IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY Topology) {
 			    "Topology is D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED");
 		return;
 	}
-	
+  // Validar Topology
 	m_deviceContext->IASetPrimitiveTopology(Topology);
 }
 
@@ -199,6 +205,7 @@ DeviceContext::ClearRenderTargetView(ID3D11RenderTargetView* pRenderTargetView,
 		return;
 	}
 	
+  // Validar el render target view
 	m_deviceContext->ClearRenderTargetView(pRenderTargetView, 
 																				 ColorRGBA);
 }
@@ -220,7 +227,7 @@ DeviceContext::ClearDepthStencilView(ID3D11DepthStencilView* pDepthStencilView,
 			"Invalid ClearFlags: must include D3D11_CLEAR_DEPTH or D3D11_CLEAR_STENCIL");
 		return;
 	}
-	
+  // Validar el DepthStencilView
 	m_deviceContext->ClearDepthStencilView(pDepthStencilView, 
 																				 ClearFlags, 
 																				 Depth, 
@@ -235,7 +242,7 @@ DeviceContext::VSSetConstantBuffers(unsigned int StartSlot,
 		ERROR("DeviceContext", "VSSetConstantBuffers", "ppConstantBuffers is nullptr");
 		return;
 	}
-	
+  // Validar el número de buffers
 	m_deviceContext->VSSetConstantBuffers(StartSlot, 
 																				NumBuffers, 
 																				ppConstantBuffers);
@@ -250,7 +257,7 @@ DeviceContext::PSSetConstantBuffers(unsigned int StartSlot,
 		ERROR("DeviceContext", "PSSetConstantBuffers", "ppConstantBuffers is nullptr");
 		return;
 	}
-	
+  // Validar el número de buffers
 	m_deviceContext->PSSetConstantBuffers(StartSlot, 
 																				NumBuffers, 
 																				ppConstantBuffers);
@@ -265,7 +272,7 @@ DeviceContext::DrawIndexed(unsigned int IndexCount,
 		ERROR("DeviceContext", "DrawIndexed", "IndexCount is zero");
 		return;
 	}
-	
+  // Validar el número de indices
 	m_deviceContext->DrawIndexed(IndexCount, 
 															 StartIndexLocation, 
 															 BaseVertexLocation);

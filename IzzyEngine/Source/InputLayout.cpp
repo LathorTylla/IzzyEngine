@@ -16,7 +16,7 @@ InputLayout::init(Device& device,
     return E_INVALIDARG;
   }
   HRESULT hr = S_OK;
-    
+  // verificar si el dispositivo es válido
   hr = device.CreateInputLayout(Layout.data(), 
                                 static_cast<unsigned int>(Layout.size()), 
                                 VertexShaderData->GetBufferPointer(), 
@@ -40,10 +40,12 @@ InputLayout::render(DeviceContext& deviceContext) {
     ERROR("InputLayout", "render", "Invalid Device Context (m_deviceContext is nullptr)");
     return;
   }
+  // verificar si el input layout es válido
   deviceContext.IASetInputLayout(m_inputLayout);
 }
 
 void
 InputLayout::destroy() {
+  // liberar el input layout
   SAFE_RELEASE(m_inputLayout);
 }

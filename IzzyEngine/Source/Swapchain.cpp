@@ -65,19 +65,19 @@ SwapChain::init(Device& device,
     return hr;
   }
   // Configurar la descripción del SwapChain
-  DXGI_SWAP_CHAIN_DESC sd;
-  memset(&sd, 0, sizeof(sd));
-  sd.BufferCount = 1;
-  sd.BufferDesc.Width = window.m_width;
-  sd.BufferDesc.Height = window.m_height;
-  sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-  sd.BufferDesc.RefreshRate.Numerator = 60;
-  sd.BufferDesc.RefreshRate.Denominator = 1;
-  sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-  sd.OutputWindow = window.m_hWnd;
-  sd.Windowed = TRUE;
-  sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
-  sd.SampleDesc.Count = m_sampleCount;
+  DXGI_SWAP_CHAIN_DESC sd;  // Inicializar la descripción
+  memset(&sd, 0, sizeof(sd));  // Limpiar la descripción
+  sd.BufferCount = 1; // Número de buffers
+  sd.BufferDesc.Width = window.m_width; // Ancho de la ventana
+  sd.BufferDesc.Height = window.m_height; // Alto de la ventana
+  sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // Formato de color
+  sd.BufferDesc.RefreshRate.Numerator = 60; // Tasa de refresco
+  sd.BufferDesc.RefreshRate.Denominator = 1;  // Tasa de refresco
+  sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT; // Uso del buffer
+  sd.OutputWindow = window.m_hWnd; // Ventana de salida
+  sd.Windowed = TRUE; // Ventana en modo ventana
+  sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD; // Efecto de intercambio
+  sd.SampleDesc.Count = m_sampleCount; // Número de muestras
   sd.SampleDesc.Quality = m_qualityLevels - 1;  // Máxima calidad
 
   // Obtener la fábrica DXGI
@@ -128,14 +128,15 @@ SwapChain::init(Device& device,
 
   void 
   SwapChain::destroy() {
-    SAFE_RELEASE(m_swapchain);
-    SAFE_RELEASE(m_dxgiFactory);
-    SAFE_RELEASE(m_dxgiAdapter);
-    SAFE_RELEASE(m_dxgiDevice);
+    SAFE_RELEASE(m_swapchain);   // Liberar el swap chain
+    SAFE_RELEASE(m_dxgiFactory); // Liberar la fábrica DXGI
+    SAFE_RELEASE(m_dxgiAdapter); // Liberar el adaptador DXGI
+    SAFE_RELEASE(m_dxgiDevice);  // Liberar el dispositivo DXGI
   }
   void 
   SwapChain::present() {
     if (m_swapchain) {
+      // Presentar el swap chain
       HRESULT hr = m_swapchain->Present(0, 0);
       if (FAILED(hr)) {
         ERROR("SwapChain", "present", "Failed to present swap chain");

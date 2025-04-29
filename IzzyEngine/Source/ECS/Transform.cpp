@@ -3,9 +3,8 @@
 
 void
 Transform::init() {
-scale.one();
-
-  matrix = XMMatrixIdentity();
+  scale.one();  // Inicializar escala a 1
+  matrix = XMMatrixIdentity();  // Inicializar matriz a identidad
 }
 
 void
@@ -25,7 +24,7 @@ void
 Transform::setTransform(const EngineUtilities::Vector3& newPos,
                         const EngineUtilities::Vector3& newRot,
                         const EngineUtilities::Vector3& newSca) {
-  position = newPos;
-  rotation = newRot;
-  scale = newSca;
+  position = newPos;  // Actualizar posicion
+  rotation = newRot;  // Actualizar rotacion
+  scale = newSca;  // Actualizar escala
 }

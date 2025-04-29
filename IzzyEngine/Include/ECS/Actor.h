@@ -5,8 +5,6 @@
 #include "Texture.h"
 #include "SamplerState.h"
 #include "Transform.h"
-//#include "Rasterizer.h"
-//#include "BlendState.h"
 
 class Device;
 class MeshComponent;
@@ -19,7 +17,7 @@ class MeshComponent;
  * texturas y varios componentes. Proporciona métodos para actualizar, renderizar y destruir el actor.
  */
 class
-  Actor : public Entity {
+Actor : public Entity {
 public:
   /**
    * @brief Constructor por defecto.
@@ -36,7 +34,7 @@ public:
    * @brief Destructor virtual.
    */
   virtual
-    ~Actor() = default;
+  ~Actor() = default;
 
   /**
    * @brief Actualiza el actor.
@@ -44,7 +42,8 @@ public:
    * @param deviceContext Contexto del dispositivo para operaciones gráficas.
    */
   void
-  update(float deltaTime, DeviceContext& deviceContext) override;
+  update(float deltaTime, 
+         DeviceContext& deviceContext) override;
 
   /**
    * @brief Renderiza el actor.
@@ -65,7 +64,8 @@ public:
    * @param meshes Vector de componentes de malla que se van a establecer.
    */
   void
-  setMesh(Device& device, std::vector<MeshComponent> meshes);
+  setMesh(Device& device, 
+          std::vector<MeshComponent> meshes);
 
   /**
    * @brief Establece las texturas del actor.
@@ -89,7 +89,8 @@ public:
   * @brief Establece el nombre del actor.
   * @param name El nuevo nombre del actor.
   */
-  void setName(std::string name) {
+  void 
+  setName(std::string name) {
     m_name = name;
   }
 
@@ -103,25 +104,26 @@ public:
     getComponent();
 
 private:
-  std::vector<MeshComponent> m_meshes;  ///< Vector de componentes de malla.
-  std::vector<Texture> m_textures;      ///< Vector de texturas.
-  std::vector<Buffer> m_vertexBuffers;  ///< Buffers de vértices.
-  std::vector<Buffer> m_indexBuffers;   ///< Buffers de índices.
+  std::vector<MeshComponent> m_meshes;  // Vector de componentes de malla.
+  std::vector<Texture> m_textures;      // Vector de texturas.
+  std::vector<Buffer> m_vertexBuffers;  // Buffers de vértices.
+  std::vector<Buffer> m_indexBuffers;   // Buffers de índices.
 
-  CBChangesEveryFrame m_model;            ///< Constante del buffer para cambios en cada frame.
+  CBChangesEveryFrame m_model;            // Constante del buffer para cambios en cada frame.
 
-  Buffer m_modelBuffer;                 ///< Buffer del modelo.
-  //BlendState m_blendstate;
-  //Rasterizer m_rasterizer;
-  SamplerState m_sampler;               ///< Estado del muestreador.
+  Buffer m_modelBuffer;                 // Buffer del modelo.
+  
+  SamplerState m_sampler;               // Estado del muestreador.
 
-  std::string m_name = "Actor";         ///< Nombre del actor.
+  std::string m_name = "Actor";         // Nombre del actor.
 };
 
-/**
- * El propósito de esta función es buscar y devolver un componente específico de un actor,
- * utilizando el tipo de componente especificado como argumento de la plantilla.
- * Si el componente no se encuentra, la función devuelve nullptr.
+/*
+* @brief Obtiene un componente específico del actor.
+* @param T Tipo del componente que se va a obtener.
+* @return Puntero compartido al componente, o nullptr si no se encuentra.
+*
+* Este método busca en la lista de componentes del actor y devuelve el primer componente que coincide con el tipo T.
 */
 template<typename T>
 inline EngineUtilities::TSharedPointer<T>

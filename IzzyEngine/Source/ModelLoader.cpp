@@ -167,13 +167,13 @@ ModelLoader::ProcessFBXMesh(FbxNode* node) {
 void
 ModelLoader::ProcessFBXMaterials(FbxSurfaceMaterial* material) {
 	if (material) {
-		FbxProperty prop = material->FindProperty(FbxSurfaceMaterial::sDiffuse);
+    FbxProperty prop = material->FindProperty(FbxSurfaceMaterial::sDiffuse);	// Get the diffuse property
 		if (prop.IsValid()) {
-			int textureCount = prop.GetSrcObjectCount<FbxTexture>();
+      int textureCount = prop.GetSrcObjectCount<FbxTexture>();	// Get the number of textures
 			for (int i = 0; i < textureCount; ++i) {
 				FbxTexture* texture = FbxCast<FbxTexture>(prop.GetSrcObject<FbxTexture>(i));
 				if (texture) {
-					textureFileNames.push_back(texture->GetName());
+          textureFileNames.push_back(texture->GetName()); // Get the texture name
 				}
 			}
 		}

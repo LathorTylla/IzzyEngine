@@ -87,40 +87,40 @@ public:
 
 public:
   // Variables miembro de la clase BaseApp
-  Window															m_window;
-  Device															m_device;
-  DeviceContext												m_deviceContext;
-  SwapChain														m_swapchain;
-  Texture															m_backBuffer;
-  Texture															m_depthStencil;
-  RenderTargetView										m_renderTargetView;
-  DepthStencilView										m_depthStencilView;
-  Viewport														m_viewport;
-  ShaderProgram												m_shaderProgram;
-  Buffer 															m_neverChanges;
-  Buffer 															m_changeOnResize;
-  Buffer 															m_changeEveryFrame;
-  XMMATRIX                            m_View;
-  XMMATRIX                            m_Projection;
-  XMFLOAT4                            m_vMeshColor;
+  Window                         m_window;
+  Device                         m_device;
+  DeviceContext	                 m_deviceContext;
+  SwapChain	                     m_swapchain;
+  Texture		                     m_backBuffer;
+  Texture		                     m_depthStencil;
+  RenderTargetView               m_renderTargetView;
+  DepthStencilView               m_depthStencilView;
+  Viewport                       m_viewport;
+  ShaderProgram	                 m_shaderProgram;
+  Buffer                         m_neverChanges;
+  Buffer                         m_changeOnResize;
+  Buffer                         m_changeEveryFrame;
+  XMMATRIX                       m_View;
+  XMMATRIX                       m_Projection;
+  XMFLOAT4                       m_vMeshColor;
 
-  CBNeverChanges                      cbNeverChanges;
-  CBChangeOnResize                    cbChangesOnResize;
+  CBNeverChanges                 cbNeverChanges;
+  CBChangeOnResize               cbChangesOnResize;
 
-  Camera                              m_camera;
+  Camera                         m_camera;
 
-  UserInterface                       m_userInterface;
+  UserInterface                  m_userInterface;
 
   //Modelos FBX
-  ModelLoader                         m_psyduck;
+  ModelLoader                    m_psyduck; 
   EngineUtilities::TSharedPointer<Actor> APsyduck;
- 	std::vector<Texture>								m_psyduckTextures;
- 	Texture                             m_default;
+ 	std::vector<Texture>					 m_psyduckTextures;
+ 	Texture                        m_default;
 
   //Modelos OBJ
-  ModelLoader                         m_objModel;
+  ModelLoader                    m_objModel;
   EngineUtilities::TSharedPointer<Actor> AObjModel;
-  std::vector<Texture>								m_objTextures;
+  std::vector<Texture>					 m_objTextures;
 
   //Actores
   std::vector<EngineUtilities::TSharedPointer<Actor>> m_actors;  // contenedor de todos los actores

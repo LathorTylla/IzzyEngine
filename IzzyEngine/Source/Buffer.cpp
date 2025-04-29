@@ -7,11 +7,12 @@ HRESULT
 Buffer::createBuffer(Device& device,
                      D3D11_BUFFER_DESC& desc,
                      D3D11_SUBRESOURCE_DATA* initData) {
+  // Check if the device is valid
   if (!device.m_device) {
     ERROR("Buffer", "createBuffer", "Device is nullptr");
     return E_POINTER;
   }
-
+  // Check if the buffer description is valid
   HRESULT 
   hr = device.CreateBuffer(&desc, initData, &m_buffer);
   if (FAILED(hr)) {
@@ -26,38 +27,42 @@ Buffer::init(Device& device,
              const MeshComponent& mesh, 
              unsigned int bindFlag) {
   if (!device.m_device) {
+    // Check if the device is valid
     ERROR("Buffer", "init", "Device is nullptr");
     return E_POINTER;
   }
 
   if ((bindFlag & D3D11_BIND_VERTEX_BUFFER) && mesh.m_vertex.empty()) {
+    // Check if the vertex buffer is empty
     ERROR("Buffer", "init", "Vertex Buffer is empty");
     return E_INVALIDARG;
   }
 
   if ((bindFlag & D3D11_BIND_INDEX_BUFFER) && mesh.m_index.empty()) {
+    // Check if the index buffer is empty
     ERROR("Buffer", "init", "Index buffer is empty");
     return E_INVALIDARG;
   }
 
-  D3D11_BUFFER_DESC desc = {};
-  D3D11_SUBRESOURCE_DATA InitData = {};
+  D3D11_BUFFER_DESC desc = {};  // Initialize the buffer description
+  D3D11_SUBRESOURCE_DATA InitData = {}; // Initialize the subresource data
 
-  desc.Usage = D3D11_USAGE_DEFAULT;
-  desc.CPUAccessFlags = 0;
-  m_bindFlag = bindFlag;
+  desc.Usage = D3D11_USAGE_DEFAULT; // Set the usage to default
+  desc.CPUAccessFlags = 0;  // No CPU access
+  m_bindFlag = bindFlag;  // Set the bind flag
 
+  // Set the buffer description based on the bind flag
   if (bindFlag & D3D11_BIND_VERTEX_BUFFER) {
-    m_stride = sizeof(SimpleVertex);
-    desc.ByteWidth = m_stride * static_cast<unsigned int>(mesh.m_vertex.size());
-    desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-    InitData.pSysMem = mesh.m_vertex.data();
+    m_stride = sizeof(SimpleVertex);  // Set the stride to the size of SimpleVertex
+    desc.ByteWidth = m_stride * static_cast<unsigned int>(mesh.m_vertex.size());// Set the byte width
+    desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;  // Set the bind flag to vertex buffer
+    InitData.pSysMem = mesh.m_vertex.data();  // Set the system memory to the vertex data
   }
   else if (bindFlag & D3D11_BIND_INDEX_BUFFER) {
-    m_stride = sizeof(unsigned int);
-    desc.ByteWidth = m_stride * static_cast<unsigned int>(mesh.m_index.size());
-    desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-    InitData.pSysMem = mesh.m_index.data();
+    m_stride = sizeof(unsigned int);  // Set the stride to the size of unsigned int
+    desc.ByteWidth = m_stride * static_cast<unsigned int>(mesh.m_index.size()); // Set the byte width 
+    desc.BindFlags = D3D11_BIND_INDEX_BUFFER;  // Set the bind flag to index buffer
+    InitData.pSysMem = mesh.m_index.data();  // Set the system memory to the index data
   }
 
   return createBuffer(device, desc, &InitData);
@@ -68,19 +73,20 @@ HRESULT
 Buffer::init(Device& device, 
              unsigned int ByteWidth) {
   if (!device.m_device || ByteWidth == 0) {
+    // Check if the device is valid
     ERROR("Buffer", "init", "Invalid parameters");
     return E_INVALIDARG;
   }
 
-  m_stride = ByteWidth;
+  m_stride = ByteWidth; // Set the stride to the byte width
 
-  D3D11_BUFFER_DESC desc = {};
-  desc.Usage = D3D11_USAGE_DEFAULT;
-  desc.ByteWidth = ByteWidth;
-  desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-  m_bindFlag = desc.BindFlags;
+  D3D11_BUFFER_DESC desc = {};  // Initialize the buffer description
+  desc.Usage = D3D11_USAGE_DEFAULT; // Set the usage to default
+  desc.ByteWidth = ByteWidth; // Set the byte width
+  desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER; // Set the bind flag to constant buffer
+  m_bindFlag = desc.BindFlags; // Set the bind flag
 
-  return createBuffer(device, desc, nullptr);
+  return createBuffer(device, desc, nullptr); 
 }
 
 void

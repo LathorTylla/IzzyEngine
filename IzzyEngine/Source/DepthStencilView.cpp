@@ -3,9 +3,10 @@
 #include "DeviceContext.h"
 #include "Texture.h"
 
-HRESULT DepthStencilView::init(Device& device, 
-                               Texture& depthStencil, 
-                               DXGI_FORMAT format) {
+HRESULT 
+DepthStencilView::init(Device& device, 
+                       Texture& depthStencil, 
+                       DXGI_FORMAT format) {
   if (!device.m_device) {
     ERROR("DepthStencilView", "init", "Device is nullptr");
     return E_POINTER;
@@ -18,11 +19,11 @@ HRESULT DepthStencilView::init(Device& device,
   HRESULT hr = S_OK;
 
   // Estructura para describir la Depth Stencil View
-  D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
-  memset(&descDSV, 0, sizeof(descDSV));
-  descDSV.Format = format;
-  descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
-  descDSV.Texture2D.MipSlice = 0;
+  D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;  // Inicializar la estructura
+  memset(&descDSV, 0, sizeof(descDSV));  // Limpiar la estructura
+  descDSV.Format = format;  // Formato de la textura Depth Stencil
+  descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;  // Tipo de vista
+  descDSV.Texture2D.MipSlice = 0;  // MipSlice para la textura Depth Stencil
 
   // Crear Depth Stencil View
   hr = device.CreateDepthStencilView(depthStencil.m_texture, 
@@ -36,7 +37,8 @@ HRESULT DepthStencilView::init(Device& device,
   return S_OK;
 }
 
-void DepthStencilView::render(DeviceContext& deviceContext) {
+void 
+DepthStencilView::render(DeviceContext& deviceContext) {
   if (!m_depthStencilView) {
     ERROR("DepthStencilView", "render", "DepthStencilView is nullptr");
     return;
@@ -53,6 +55,7 @@ void DepthStencilView::render(DeviceContext& deviceContext) {
                                       0);
 }
 
-void DepthStencilView::destroy() {
+void 
+DepthStencilView::destroy() {
   SAFE_RELEASE(m_depthStencilView);
 }
